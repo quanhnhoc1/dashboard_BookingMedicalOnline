@@ -47,7 +47,7 @@ const toggleProfileDropdown = () => {
             <div
               v-show="isProfileOpen"
               class="ml-4 mt-1 space-y-1 transition-all duration-200">
-              <router-link to="/revenue-doctor" class="menu-item"
+              <router-link to="/admin/revenue-doctor" class="menu-item"
                 >📊 Doanh thu bác sĩ</router-link
               >
               <router-link to="/revenue-clinic" class="menu-item"

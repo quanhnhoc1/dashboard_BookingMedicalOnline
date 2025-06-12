@@ -5,7 +5,10 @@
     @mouseenter="visible = true"
     @mouseleave="visible = false">
     <button class="inline-flex items-center hover:text-blue-600">
-      <span>{{ title }}</span>
+      <!-- <span>{{ title }}</span> -->
+      <router-link :to="link">
+        <span>{{ title }}</span>
+      </router-link>
       <svg
         class="w-3 h-3 ml-0.5 relative left-2"
         fill="none"
@@ -41,6 +44,7 @@ import { ref } from "vue";
 const props = defineProps({
   title: String,
   items: Array,
+  link: String,
 });
 
 const visible = ref(false);
