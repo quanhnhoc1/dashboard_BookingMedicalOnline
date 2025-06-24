@@ -1,8 +1,20 @@
 <script setup>
-import SearchBar from "@/components/SearchBar.vue";
+import SearchBar from "@/components/composables/SearchBar.vue";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 
+const router = useRouter();
+const authStore = useAuthStore();
+
+onMounted(() => {
+  if (authStore.userRole !== "admin") {
+    alert("Bạn không có quyền truy cập vào trang này!");
+    router.push("/"); // Không có quyền → chuyển về trang chủ
+  }
+});
 // Toggle for dropdown user menu
 const showDropDown = ref(false);
 

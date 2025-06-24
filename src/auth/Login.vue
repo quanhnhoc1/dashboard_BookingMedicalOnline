@@ -1,19 +1,10 @@
-<script setup>
-// import TestLogin from "../TestLogin.vue";
-// import userServices from "../../services/userServices/user.services";
+<!-- <script setup>
 import { onMounted, ref } from "vue";
 
-// const users = ref([
-//   { username: "user1", password: "123" },
-//   { username: "user2", password: "123" },
-//   { username: "user3", password: "123" },
-// ]);
 const users = ref([]);
-// console.log("Users JSON:", JSON.stringify(users.value));
 
 const currentUser = ref(null);
 
-// get users from api
 onMounted(async () => {
   try {
     const response = await loginService.getUsers();
@@ -48,7 +39,7 @@ const handleLogin = () => {
     alert("Sai tên đăng nhập hoặc mật khẩu!");
   }
 };
-</script>
+</script> -->
 <template>
   <div class="flex h-screen max-w-[1140px] mx-auto">
     <!-- Bên trái: form -->
@@ -59,6 +50,9 @@ const handleLogin = () => {
         </h1>
         <p class="text-lg text-gray-700 mb-6">
           Vui lòng nhập số điện thoại để tiếp tục
+        </p>
+        <p v-if="errorMessage" class="text-red-500 text-sm mt-2">
+          {{ errorMessage }}
         </p>
         <!-- <main>
           <TestLogin />
@@ -132,5 +126,40 @@ const handleLogin = () => {
     </div>
   </div>
 </template>
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
 
-<style lang="scss" scoped></style>
+const router = useRouter();
+const authStore = useAuthStore();
+const username = ref("");
+const password = ref("");
+const errorMessage = ref("");
+
+const handleLogin = async () => {
+  errorMessage.value = "";
+  if (!username.value || !password.value) {
+    alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!");
+    return;
+  }
+  try {
+    await authStore.login({
+      user: username.value, // username là email
+      password: password.value,
+    });
+    const role = authStore.userRole;
+    if (role === "admin") {
+      router.push("/admin");
+    } else if (role === "user") {
+      router.push("/");
+    } else {
+      errorMessage.value = "Bạn không có quyền truy cập!";
+    }
+  } catch (error) {
+    errorMessage.value = error.message || "Sai tên đăng nhập hoặc mật khẩu!";
+    console.error("Login error:", error);
+  }
+};
+</script>
+<style scoped></style>

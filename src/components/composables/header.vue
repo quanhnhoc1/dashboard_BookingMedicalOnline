@@ -3,9 +3,9 @@
     class="w-full fixed top-0 left-0 z-50 bg-white shadow-sm border-b transition-all duration-300">
     <div class="max-w-[1170px] m-auto flex items-center">
       <transition name="slide-fade">
-        <div class="logo">
-          <img src="../assets/img/logoMepro.png" alt="medpro" class="h-14" />
-        </div>
+        <RouterLink to="/">
+          <img src="@/assets/img/logoMepro.png" alt="medpro" class="h-14" />
+        </RouterLink>
       </transition>
       <div class="flex-1">
         <transition name="slide-fade">
@@ -60,7 +60,10 @@
                   <button
                     class="group border border-blue-500 text-blue-500 px-3 py-1 rounded-full flex items-center space-x-1 hover:bg-blue-500">
                     <i class="group-hover:text-white fas fa-user"></i>
-                    <span class="group-hover:text-white">NM Thân</span>
+                    <span v-if="isLoggedIn === false">Tài khoản</span>
+                    <span v-else class="group-hover:text-white">{{
+                      fullName
+                    }}</span>
                   </button>
                 </template>
               </Modal>
@@ -93,7 +96,24 @@
                 { label: 'Bệnh viện công', href: '/co-so-y-te/benh-vien-cong' },
                 { label: 'Phòng khám', href: 'phong-kham' },
               ]" />
-            <span>Dịch vụ y tế</span>
+            <DropdownMenu
+              title="Cơ sở y tế"
+              link="/dich-vu-y-te"
+              :items="[
+                {
+                  label: 'Đặt khám chuyên khoa',
+                  href: '/dich-vu-y-te/dat-kham-chuyen-khoa',
+                },
+                {
+                  label: 'Đặt khám tại cơ sở',
+                  href: 'dich-vu-y-te/dat-kham-tai-co-so',
+                },
+                {
+                  label: 'Đặt khám theo bác sĩ',
+                  href: 'dich-vu-y-te/dat-kham-theo-bac-si',
+                },
+                { label: 'Gói khám', href: 'dich-vu-y-te/goi-kham' },
+              ]" />
             <span>Khám sức khỏe doanh nghiệp</span>
             <span class="relative group cursor-pointer">
               Tin tức <i class="fas fa-chevron-down text-xs ml-1"></i>
@@ -112,10 +132,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import DropdownMenu from "@/components/MenuDropDown.vue";
-import Modal from "../components/Modal.vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import DropdownMenu from "@/components/composables/MenuDropDown.vue";
+import Modal from "./Modal.vue";
 const isHidden = ref(false);
+import { useAuthStore } from "@/stores/authStore";
+import { storeToRefs } from "pinia";
+
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
+
+onMounted(() => {
+  console.log("Đã đăng nhập111?", isLoggedIn.value);
+  window.addEventListener("scroll", handleScroll);
+});
+
+const fullName = computed(() => authStore.userName);
 let lastScrollY = window.scrollY;
 
 const handleScroll = () => {
@@ -129,10 +161,6 @@ const handleScroll = () => {
 
   lastScrollY = currentY;
 };
-
-onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
-});
 
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);

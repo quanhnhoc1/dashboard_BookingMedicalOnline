@@ -6,7 +6,6 @@
         <SearchBar class="max-w-[220px]" />
       </template>
     </Header>
-    <FindHospital class="pt-[100px]" />
 
     <div class="pt-[100px] border border-red-500">
       <!-- Dùng router-view để hiển thị component con -->
@@ -18,5 +17,4 @@
 <script setup>
 import Header from "@/components/composables/header.vue";
 import SearchBar from "@/components/composables/SearchBar.vue";
-import FindHospital from "@/components/FindHospital.vue";
 </script>

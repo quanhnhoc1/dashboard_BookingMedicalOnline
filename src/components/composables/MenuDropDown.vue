@@ -23,7 +23,7 @@
     <transition name="fade">
       <div
         v-if="visible"
-        class="absolute left-0 top-full mt-2 z-10 w-44 bg-white rounded-lg shadow divide-y divide-gray-100">
+        class="absolute left-0 top-full mt-2 z-10 w-48 bg-white rounded-lg shadow divide-y divide-gray-100">
         <ul class="py-2 text-sm text-gray-700">
           <li v-for="(item, index) in items" :key="index">
             <router-link

@@ -34,7 +34,7 @@
               class="group flex items-center gap-2.5 p-4 font-bold rounded-4xl cursor-pointer hover:bg-sky-700 transition duration-300 border border-sky-300 rounded-xl">
               <i
                 class="fi fi-rr-user text-sky-500 group-hover:text-white text-xl"></i>
-              <h3 class="text-sky-500 group-hover:text-white">NM Thân</h3>
+              <h3 class="text-sky-500 group-hover:text-white">{{ user }}</h3>
             </div>
           </template>
           <template #content>
@@ -45,7 +45,9 @@
                 </div>
                 <div>
                   <div class="text-gray-500 text-sm">Xin chào,</div>
-                  <div class="text-sky-500 font-bold text-lg">NM Thân</div>
+                  <div class="text-sky-500 font-bold text-lg">
+                    {{ fullName }}
+                  </div>
                 </div>
               </div>
               <hr class="my-2" />
@@ -99,8 +101,20 @@
 </template>
 
 <script setup>
-import Modal from "@/components/Modal.vue";
-import SearchBar from "@/components/SearchBar.vue";
+import { onMounted } from "vue";
+import { useAuthStore } from "@/stores/authStore";
+import { storeToRefs } from "pinia";
+
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
+
+onMounted(() => {
+  console.log("Đã đăng nhập111?", isLoggedIn.value);
+});
+const fullName = computed(() => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  return user ? user.fullName : "";
+});
 </script>
 
 <style lang="" scoped></style>

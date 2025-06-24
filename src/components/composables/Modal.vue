@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <!-- Trigger -->
-    <div @click="isOpen = true">
+    <div @click="handleOpenModal">
       <slot name="trigger"></slot>
     </div>
 
@@ -22,7 +22,9 @@
                 </div>
                 <div>
                   <div class="text-gray-500 text-sm">Xin chào,</div>
-                  <div class="text-sky-500 font-bold text-lg">NM Thân</div>
+                  <div class="text-sky-500 font-bold text-lg">
+                    {{ fullName }}
+                  </div>
                 </div>
               </div>
             </Transition>
@@ -35,8 +37,8 @@
                 <div
                   class="flex items-center gap-2 cursor-pointer hover:text-sky-800 hover:bg-sky-100">
                   <i class="fi fi-rr-add-folder"></i>
-                  <router-link class="font-semibold"
-                    >Hồ sơ bệnh nhân</router-link
+                  <RouterLink to="/user-profile" class="font-semibold"
+                    >Hồ sơ bệnh nhân</RouterLink
                   >
                 </div>
                 <div
@@ -60,9 +62,10 @@
             <Transition name="fade-up" appear>
               <div
                 v-if="isOpen"
+                @click="handleLogout"
                 class="flex items-center gap-2 text-red-500 font-semibold cursor-pointer hover:text-red-600 mb-2">
                 <i class="fi fi-rr-sign-out-alt"></i>
-                <router-link to="/login"> Đăng xuất </router-link>
+                <span>Đăng xuất</span>
               </div>
             </Transition>
 
@@ -80,9 +83,31 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useAuthStore } from "@/stores/authStore";
+import { storeToRefs } from "pinia";
 
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
 const isOpen = ref(false);
+
+const handleOpenModal = () => {
+  if (isLoggedIn.value) {
+    isOpen.value = true;
+  } else {
+    window.location.href = "/login";
+  }
+};
+
+const handleLogout = () => {
+  authStore.logout();
+  window.location.href = "/";
+};
+
+const fullName = computed(() => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  return user ? user.fullName : "";
+});
 </script>
 
 <style scoped>
