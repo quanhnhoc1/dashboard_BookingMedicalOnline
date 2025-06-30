@@ -9,12 +9,26 @@ import privateHospital from "@/pages/medicalFacilities/PrivateHospitalPage.vue";
 import MedicalFacilityLayout from "@/layouts/MedicalFacilityLayout.vue";
 import MedicalServicesLayout from "@/layouts/MedicalServicesLayout.vue";
 import MedicalTickets from "@/layouts/MedicalTickets.vue";
+import serviceMenuItems from "@/components/composables/serviceMenuItems.vue";
+import bookingOptionsPage from "@/pages/medicalBooking/bookingOptionsPage.vue";
 const routes = [
   {
     path: "/",
     name: "userDashboard",
     component: testLayout,
     meta: { requiresAuth: true, allowedRoles: ["user"] },
+    children: [
+      {
+        path: "",
+        name: "menuServicesItems",
+        component: serviceMenuItems,
+      },
+      {
+        path: "dat-kham-benh",
+        name: "bookingPage",
+        component: bookingOptionsPage,
+      },
+    ],
   },
   {
     path: "/co-so-y-te",
@@ -36,6 +50,12 @@ const routes = [
         path: "phong-kham",
         name: "clinic-hospital",
         component: () => import("@/pages/medicalFacilities/ClinicPage.vue"),
+      },
+      {
+        path: "dat-kham-benh",
+        name: "dat-kham-benh",
+        component: () =>
+          import("@/pages/medicalBooking/bookingOptionsPage.vue"),
       },
     ],
   },

@@ -50,11 +50,7 @@
                 <i class="fas fa-mobile-alt"></i>
                 <span>Tải ứng dụng</span>
               </button>
-              <!-- <button
-                class="group border border-blue-500 text-blue-500 px-3 py-1 rounded-full flex items-center space-x-1 hover:bg-blue-500">
-                <i class="group-hover:text-white fas fa-user"></i>
-                <span class="group-hover:text-white">NM Thân</span>
-              </button> -->
+
               <Modal>
                 <template #trigger>
                   <button

@@ -43,13 +43,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 // import logo hospitals
-import daLieuCT from "../../assets/public_hospitals_img/dalieuCT.webp";
-import nhiDongCT from "../../assets/public_hospitals_img/NhiDongCT.webp";
-import rangHamMatCT from "../../assets/public_hospitals_img/matRangHamMatCT.webp";
-import timMachCT from "../../assets/public_hospitals_img/timMachCT.webp";
-import daKhoaCT from "../../assets/public_hospitals_img/dkTPCT.webp";
-import taiMuiHongCT from "../../assets/public_hospitals_img/TaiMuiHongCT.webp";
-import CDCCT from "../../assets/public_hospitals_img/CDCCT.webp";
+import daLieuCT from "../../../public/publicHospitals_img/daLieuCT.webp";
+import nhiDongCT from "../../../public/publicHospitals_img/NhiDongCT.webp";
+import rangHamMatCT from "../../../public/publicHospitals_img/matRangHamMatCT.webp";
+import timMachCT from "../../../public/publicHospitals_img/timMachCT.webp";
+import daKhoaCT from "../../../public/publicHospitals_img/dkTPCT.webp";
+import taiMuiHongCT from "../../../public/publicHospitals_img/TaiMuiHongCT.webp";
+import CDCCT from "../../../public/publicHospitals_img/CDCCT.webp";
 const hospitals = [
   {
     name: "Bệnh viện Da Liễu Cần Thơ",

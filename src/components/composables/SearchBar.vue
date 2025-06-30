@@ -12,20 +12,6 @@
       </form>
     </div>
     <slot name="textIntro"></slot>
-    <!-- <div class="mt-6 text-[#0d2533] text-sm space-y-2">
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis,
-        ullam?
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis,
-        ullam?
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis,
-        ullam?
-      </p>
-    </div> -->
   </div>
 </template>
 

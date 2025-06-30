@@ -8,7 +8,7 @@
     </Header>
     <FindHospital class="pt-[100px]" />
 
-    <div class="pt-[100px] border border-red-500">
+    <div class="pt-[20px] border border-red-500 bg-[#e8f2f7]">
       <!-- Dùng router-view để hiển thị component con -->
       <router-view />
     </div>
