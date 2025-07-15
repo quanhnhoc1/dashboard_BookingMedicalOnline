@@ -78,8 +78,6 @@
             <slot name="iconHeadPhone"></slot>
             <div>
               <slot name="phoneNumberCall"></slot>
-              <!-- <p class="text-xs">Hỗ trợ đặt khám</p>
-              <p class="text-orange-500 font-semibold text-lg">1900 2115</p> -->
             </div>
           </div>
 

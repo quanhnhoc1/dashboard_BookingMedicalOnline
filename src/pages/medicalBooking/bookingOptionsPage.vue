@@ -21,7 +21,9 @@
 
     <!-- Các hình thức đặt khám -->
     <div class="mt-10 flex flex-wrap justify-center gap-6">
-      <div
+      <RouterLink
+        @click="goToBookingSpecialties(hospital)"
+        :to="option.to"
         v-for="option in bookingOptions"
         :key="option.label"
         class="w-64 p-4 bg-white rounded-xl shadow hover:shadow-md cursor-pointer transition flex items-center gap-3">
@@ -29,7 +31,7 @@
         <span class="font-semibold text-gray-700 text-base">{{
           option.label
         }}</span>
-      </div>
+      </RouterLink>
     </div>
 
     <!-- Nút quay lại -->
@@ -40,20 +42,26 @@
         ⬅️ Quay lại
       </button>
     </div>
+    <router-view />
   </div>
 </template>
 
 <script setup>
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
 import { computed } from "vue";
+import router from "@/router";
 const hospitalStore = userHospitalsStore();
 
 const hospital = computed(() => hospitalStore.selectedHospital);
-
+function goToBookingSpecialties(hospital) {
+  hospitalStore.setHospital(hospital);
+  router.push("/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa");
+}
 const bookingOptions = [
   {
     label: "Đặt khám theo chuyên khoa",
-    icon: "/icons/speciality.png", // đặt icon bạn muốn tại public/icons/
+    icon: "/icons/speciality.png",
+    to: "/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa",
   },
   {
     label: "Đặt khám theo Bác sĩ",

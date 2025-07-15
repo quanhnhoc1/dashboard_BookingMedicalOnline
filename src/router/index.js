@@ -11,6 +11,11 @@ import MedicalServicesLayout from "@/layouts/MedicalServicesLayout.vue";
 import MedicalTickets from "@/layouts/MedicalTickets.vue";
 import serviceMenuItems from "@/components/composables/serviceMenuItems.vue";
 import bookingOptionsPage from "@/pages/medicalBooking/bookingOptionsPage.vue";
+import bookingSpecialtiesPage from "@/pages/medicalBooking/bookingSpecialtiesPage.vue";
+import specitaltiesComponent from "@/components/BookingSpecialtiesComponents/specitaltiesComponent.vue";
+import BookingWithDoctorPage from "@/pages/medicalBooking/bookingWithDoctorPage.vue";
+import ChooseMedicalRecord from "@/components/BookingDoctorComponents/chooseMedicalRecord.vue";
+import UpdateUserInfo from "@/pages/user/updateUserInfo.vue";
 const routes = [
   {
     path: "/",
@@ -27,6 +32,36 @@ const routes = [
         path: "dat-kham-benh",
         name: "bookingPage",
         component: bookingOptionsPage,
+      },
+      {
+        path: "dat-kham-benh/dat-kham-benh-theo-chuyen-khoa",
+        name: "bookingSpecialtiesPage",
+        component: bookingSpecialtiesPage,
+      },
+      {
+        path: "dat-kham-benh/dat-kham-benh-theo-chuyen-khoa/chon-bac-si/:specialtyID/:hospitalID",
+        name: "bookingWithDoctor",
+        component: BookingWithDoctorPage,
+        children: [
+          {
+            path: ":doctorID",
+            name: "bookingDateTime",
+            component: () =>
+              import(
+                "@/components/BookingDoctorComponents/bookingDatePicker.vue"
+              ),
+          },
+        ],
+      },
+      {
+        path: "chon-ho-so",
+        name: "chooseMedicalRecord",
+        component: ChooseMedicalRecord,
+      },
+      {
+        path: "cap-nhat-thong-tin",
+        name: "updateUserInfo",
+        component: UpdateUserInfo,
       },
     ],
   },

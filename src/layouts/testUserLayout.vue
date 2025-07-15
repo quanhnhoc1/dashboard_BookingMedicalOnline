@@ -86,17 +86,6 @@
     <div class="flex-1">
       <slot></slot>
     </div>
-    <!-- 
-    <div class="p-4">
-      <div class="flex items-center gap-4">
-        <div class="text-sky-500">
-          <i class="fi fi-rr-phone-call text-2xl"></i>
-        </div>
-        <div class="text-gray-600">
-          <span>123123</span>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 

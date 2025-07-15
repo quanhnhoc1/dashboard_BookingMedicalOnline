@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { Login as loginApi } from "../services/authService.js";
+import axios from "axios";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: JSON.parse(localStorage.getItem("user")) || null,
+    getProfile: {},
     token: localStorage.getItem("token") || null,
   }),
   getters: {
@@ -24,6 +26,13 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         throw error;
       }
+    },
+    async fetchUser() {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:3000/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      this.getProfile = res.data;
     },
     logout() {
       this.user = null;
