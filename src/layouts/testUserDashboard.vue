@@ -18,7 +18,7 @@
                 <div class="flex items-start">
                   <div class="ml-3">
                     <h3 class="text-base font-semibold text-gray-900">
-                      Danh sách thông báo
+                      Danh sách thông báoss
                     </h3>
                     <p class="mt-1 text-sm text-gray-500">Đây là thông báo</p>
                   </div>
@@ -86,24 +86,17 @@
     <div class="flex-1">
       <slot></slot>
     </div>
-    <!-- 
-    <div class="p-4">
-      <div class="flex items-center gap-4">
-        <div class="text-sky-500">
-          <i class="fi fi-rr-phone-call text-2xl"></i>
-        </div>
-        <div class="text-gray-600">
-          <span>123123</span>
-        </div>
-      </div>
-    </div> -->
+
+    <!-- Footer -->
+    <PageFooter />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import { useAuthStore } from "@/stores/authStore";
 import { storeToRefs } from "pinia";
+import PageFooter from "@/components/layout/PageFooter.vue";
 
 const authStore = useAuthStore();
 const { isLoggedIn } = storeToRefs(authStore);

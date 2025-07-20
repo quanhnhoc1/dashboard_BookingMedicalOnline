@@ -9,18 +9,21 @@
         <p class="text-orange-500 font-semibold text-lg">1900 2115</p>
       </template>
     </Header>
-
+    <!-- <PageFooter /> -->
     <main class="flex-1 pt-[110px]">
       <banner v-if="!hideBannerRoutes.includes(route.name)" />
       <router-view />
     </main>
     <!-- <serviceMenuItems /> -->
+    <PageFooter />
   </div>
 </template>
 
 <script setup>
 import Header from "@/components/composables/header.vue";
 import banner from "@/components/composables/banner.vue";
+import PageFooter from "@/layouts/PageFooter.vue";
+
 import { useRoute } from "vue-router";
 const route = useRoute();
 const hideBannerRoutes = [
@@ -36,6 +39,8 @@ const hideBannerRoutes = [
   "bookingDateTime",
   "chooseMedicalRecord",
   "updateUserInfo",
+  "CreateNewMedicalRecord",
+  "ConfirmBookingInfo",
 ];
 </script>
 

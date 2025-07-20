@@ -1,9 +1,10 @@
 <template>
   <aside class="w-64 bg-white shadow h-screen p-4">
     <button
+      @click="gotoAddNewUserProfile()"
       class="flex items-center w-full p-3 bg-cyan-500 text-white rounded mb-4">
       <i class="fa-solid fa-user-plus"> </i>
-      <span> Them ho so </span>
+      <span> Thêm hồ sơ </span>
     </button>
 
     <ul class="space-y-2 text-gray-700">
@@ -35,7 +36,15 @@
   </aside>
 </template>
 
-<script setup></script>
+<script setup>
+import { useRouteStore } from "@/stores/routeStore";
+import { useRouter } from "vue-router";
+const routeStore = useRouteStore();
+const router = useRouter();
+const gotoAddNewUserProfile = () => {
+  routeStore.gotoAddnewUserprofileFrom(router);
+};
+</script>
 
 <style scoped>
 .material-icons {

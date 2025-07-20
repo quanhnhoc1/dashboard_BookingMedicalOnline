@@ -23,6 +23,7 @@
         </main>
       </div>
     </div>
+    <PageFooter />
   </div>
 </template>
 
@@ -30,4 +31,5 @@
 import Header from "@/components/composables/header.vue";
 import SearchBar from "@/components/composables/SearchBar.vue";
 import Sidebar from "@/components/MedicalTicketsComponents/Sidebar.vue";
+import PageFooter from "./PageFooter.vue";
 </script>

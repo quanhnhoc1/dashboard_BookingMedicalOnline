@@ -1,7 +1,7 @@
 import axios from "axios";
 const url_get_schedule_by_doctor_id =
   "http://localhost:3000/get-schedule-by-doctor-id/:doctorID";
-
+const url_get_schedule_by_doctor_date = "http://localhost:3000/schedule-id";
 async function getScheduleDayServices(doctorID) {
   try {
     const response = await axios.get(
@@ -37,4 +37,41 @@ async function getScheduleMonthServices(doctorID) {
     );
   }
 }
-export { getScheduleDayServices, getScheduleMonthServices };
+async function getScheduleScheduleIDServices(doctorID) {
+  try {
+    const response = await axios.get(
+      url_get_schedule_by_doctor_id.replace(":doctorID", doctorID)
+    );
+    console.log("Doctor's scheduleID:" + doctorID, response.data.scheduleID);
+    return response.data.scheduleID;
+  } catch (err) {
+    console.error(
+      "Error fetching doctor's schedule:",
+      err.response?.data?.message
+    );
+    throw (
+      err.response?.data?.message || "Không thể lấy lịch làm việc của bác sĩ"
+    );
+  }
+}
+async function getScheduleIDByDateService(date) {
+  try {
+    const response = await axios.post(url_get_schedule_by_doctor_date, {
+      date,
+    });
+    console.log("Schedule ID by date:", response.data);
+    return response.data.ID ?? response.data.id ?? null; // Trả về ID lịch nếu có, hoặc null nếu không có
+  } catch (err) {
+    console.error(
+      "Error fetching schedule ID by date:",
+      err.response?.data?.message
+    );
+    throw err.response?.data?.message || "Không thể lấy ID lịch theo ngày";
+  }
+}
+export {
+  getScheduleDayServices,
+  getScheduleMonthServices,
+  getScheduleIDByDateService,
+  getScheduleScheduleIDServices,
+};

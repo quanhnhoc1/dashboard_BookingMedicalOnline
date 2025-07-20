@@ -36,7 +36,7 @@ import { ref, watch } from "vue";
 import SearchBar from "@/components/composables/SearchBar.vue";
 import CategoryTabs from "@/components/CategoryTabs.vue";
 import { useSearchStore } from "@/stores/searchStore";
-
+// import PageFooter from "@/layouts/PageFooter.vue";
 const searchStore = useSearchStore();
 
 const selectedCategory = ref("benh-vien-cong");

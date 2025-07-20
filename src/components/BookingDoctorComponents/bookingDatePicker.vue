@@ -155,6 +155,19 @@ const selectDate = async (date) => {
   selectedDate.value = date;
   // await fetchTimeSlots();
   showTimeSlots.value = true;
+
+  // Định dạng ngày về YYYY-MM-DD
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const dateStr = `${year}-${month}-${day}`;
+  doctorStore.selectedDate = dateStr;
+  // GỌI STORE LẤY SCHEDULE ID
+  await doctorStore.getScheduleIDByDate(dateStr);
+  console.log(day);
+  // Nếu muốn lấy ID ra dùng tiếp:
+  const scheduleID = doctorStore.scheduleID[dateStr];
+  console.log("Schedule ID lấy được:", scheduleID);
 };
 const currentMonth = ref(today.getMonth());
 const currentYear = ref(today.getFullYear());
@@ -334,5 +347,7 @@ onMounted(() => {
   clearDate();
 });
 </script>
+
+<style scoped></style>
 
 <style scoped></style>

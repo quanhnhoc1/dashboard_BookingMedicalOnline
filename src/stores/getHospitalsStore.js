@@ -11,6 +11,7 @@ export const userHospitalsStore = defineStore("hospitals", {
     selectedHospital: null,
     selectedSpecialty: null,
     selectedDoctor: null,
+    selectedSchedule: null, // Thêm selectedSchedule
   }),
   getters: {},
   actions: {
@@ -41,6 +42,9 @@ export const userHospitalsStore = defineStore("hospitals", {
     },
     setSelectedDoctor(doctor) {
       this.selectedDoctor = doctor;
+    },
+    setSelectedSchedule(schedule) {
+      this.selectedSchedule = schedule;
     },
     clearHospital() {
       this.selectedHospital = null;

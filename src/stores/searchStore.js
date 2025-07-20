@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useSearchStore = defineStore("title", {
   state: () => ({
-    titlePage: "Title 123123",
+    titlePage: "Cơ Sở Y Tế",
     searchPlaceholder: "Tìm kiếm bác sĩ, chuyên khoa, bệnh viện...",
   }),
   actions: {

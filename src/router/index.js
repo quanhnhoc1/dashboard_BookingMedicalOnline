@@ -16,6 +16,7 @@ import specitaltiesComponent from "@/components/BookingSpecialtiesComponents/spe
 import BookingWithDoctorPage from "@/pages/medicalBooking/bookingWithDoctorPage.vue";
 import ChooseMedicalRecord from "@/components/BookingDoctorComponents/chooseMedicalRecord.vue";
 import UpdateUserInfo from "@/pages/user/updateUserInfo.vue";
+import confirmBookingInfomation from "@/pages/medicalBooking/confirmBookingInfomation.vue";
 const routes = [
   {
     path: "/",
@@ -62,6 +63,16 @@ const routes = [
         path: "cap-nhat-thong-tin",
         name: "updateUserInfo",
         component: UpdateUserInfo,
+      },
+      {
+        path: "/tao-moi-ho-so",
+        name: "CreateNewMedicalRecord",
+        component: () => import("@/pages/user/CreateNewMedicalRecord.vue"),
+      },
+      {
+        path: "xac-nhan-thong-tin-kham-benh",
+        name: "ConfirmBookingInfo",
+        component: confirmBookingInfomation,
       },
     ],
   },

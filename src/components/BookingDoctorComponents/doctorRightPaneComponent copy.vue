@@ -143,6 +143,11 @@ const doctors = ref([]);
 
 onMounted(async () => {
   const { specialtyID, hospitalID } = route.params;
+  console.log(specialtyID, hospitalID);
+  if (!specialtyID || !hospitalID) {
+    console.error("Thiếu specialtyID hoặc hospitalID trong route params");
+    return;
+  }
 
   try {
     const data = await hospitalsStore.getDoctorsWithSpecialtyIDAndHospitalID(

@@ -1,13 +1,12 @@
 <template>
   <div v-if="selectedDoctor" class="flex items-start gap-3">
-    <i
-      class="fas fa-stethoscope text-gray-500 text-base mt-0.5 flex-shrink-0"></i>
+    <i class="fas fa-user-md text-gray-500 text-xl mb-3"></i>
     <div class="flex-1">
       <span class="text-gray-500 font-medium text-sm md:text-base"
         >Tên bác sĩ:</span
       >
       <span class="text-gray-700 text-sm md:text-base ml-2">
-        {{ selectedDoctor.FULL_NAME }}
+        {{ selectedDoctor.DOCTOR_NAME }}
       </span>
     </div>
   </div>

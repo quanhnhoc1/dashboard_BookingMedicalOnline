@@ -39,7 +39,8 @@
 
       <!-- Chuyên khoa (slot) -->
       <slot name="specialtyInfo"></slot>
-      <slot name="nameDoctor"></slot>
+      <slot v-if="showNameDoctorSlot" name="nameDoctor"></slot>
+      <!-- <slot name="doctorName"></slot> -->
     </div>
   </div>
 </template>
@@ -47,9 +48,18 @@
 <script setup>
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
 import { computed } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
 const hospitalsStore = userHospitalsStore();
 const hospital = computed(() => hospitalsStore.selectedHospital);
 const selectedSpecialty = computed(() => hospitalsStore.selectedSpecialty);
+const showNameDoctorSlot = computed(() => {
+  return (
+    !!route.params.specialtyID &&
+    !!route.params.hospitalID &&
+    !!route.params.doctorID
+  );
+});
 </script>
 
 <style scoped></style>

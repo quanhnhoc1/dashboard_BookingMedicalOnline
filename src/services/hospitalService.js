@@ -1,6 +1,8 @@
 import axios from "axios";
 const url_hospitals_private = "http://localhost:3000/get-hospitals-private";
 const url_hospitals_public = "http://localhost:3000/get-hospitals-public";
+const url_get_doctor =
+  "http://localhost:3000/get-doctor-by-specialty-and-hospital/:specialtyID/:hospitalID";
 // const url_speialty_by_hospital_id =
 //   "http://localhost:3000/get-specialty-by-id/:hospitalID";
 async function getHospitalsPrivate() {
@@ -59,8 +61,9 @@ async function getDoctorFromSpecialtyIDServicesAndIDHospital(
 ) {
   try {
     const response = await axios.get(
-      `http://localhost:3000/get-doctor-by-specialty-and-hospital/${specialtyID}/${hospitalID}
-`
+      url_get_doctor
+        .replace(":specialtyID", specialtyID)
+        .replace(":hospitalID", hospitalID)
     );
     return response.data;
   } catch (error) {

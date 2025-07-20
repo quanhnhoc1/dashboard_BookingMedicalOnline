@@ -49,11 +49,11 @@
           <div class="flex items-start justify-between mb-3">
             <div class="flex-1">
               <h3 class="font-bold text-lg text-gray-800">
-                {{ doctor.DESCRIPTION }} {{ doctor.FULL_NAME }}
+                {{ doctor.DESCRIPTION }} {{ doctor.DOCTOR_NAME }}
               </h3>
-              <p class="text-cyan-600 text-sm font-medium">
+              <!-- <p class="text-cyan-600 text-sm font-medium">
                 {{ doctor.SpecialtyName }}
-              </p>
+              </p> -->
             </div>
             <div class="flex-shrink-0">
               <span
@@ -173,6 +173,7 @@ onMounted(async () => {
       for (const doctor of data) {
         await doctorStore.fetchDoctorSchedule(doctor.DOCTOR_PRO_ID);
       }
+      console.log(data);
       // console.log(doctors.value);
       // console.log(doctorSchedule);
     } catch (err) {
@@ -191,23 +192,21 @@ const filters = ref({
 const filteredDoctors = computed(() => {
   return doctors.value.filter((doc) => {
     const matchesSearch =
-      doc.FULL_NAME?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      doc.SPECIALTY_NAME?.toLowerCase().includes(
+      doc.DOCTOR_NAME?.toLowerCase().includes(
+        searchQuery.value.toLowerCase()
+      ) ||
+      doc.SpecialtyName?.toLowerCase().includes(
         searchQuery.value.toLowerCase()
       );
 
     const matchesDegree =
       !filters.value.degree || doc.DESCRIPTION === filters.value.degree;
 
-    const matchesSpecialty =
-      !filters.value.specialty ||
-      doc.SPECIALTY_NAME === filters.value.specialty;
-
     const matchesGender =
       !filters.value.gender ||
       doc.GENDER?.toLowerCase() === filters.value.gender.toLowerCase();
 
-    return matchesSearch && matchesDegree && matchesSpecialty && matchesGender;
+    return matchesSearch && matchesDegree && matchesGender;
   });
 });
 const dayMap = {
