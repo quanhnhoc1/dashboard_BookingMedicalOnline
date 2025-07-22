@@ -83,12 +83,24 @@
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <button
-          v-for="(slot, index) in Response"
+          v-for="(slot, index) in filteredTimeSlots"
           :key="index"
-          class="border border-cyan-400 text-cyan-700 rounded-md py-2 hover:bg-cyan-100 transition text-sm"
-          @click="selectTimeSlot(slot)">
-          {{ slot.start }} - {{ slot.end }}
+          @click="selectTimeSlot(slot)"
+          :class="[
+            'border rounded-md py-2 transition text-sm',
+            slot.status === 'placed'
+              ? 'bg-red-200 text-red-700 border-red-400 cursor-not-allowed'
+              : 'text-cyan-700 border-cyan-400 hover:bg-cyan-100',
+          ]"
+          :disabled="slot.status === 'placed'">
+          {{ slot.start_time }} - {{ slot.end_time }}
         </button>
+
+        <div
+          v-if="showTimeSlots && filteredTimeSlots.length === 0"
+          class="text-center text-gray-500 col-span-full py-2">
+          Không có lịch khám cho ngày này.
+        </div>
       </div>
     </div>
   </div>
@@ -103,16 +115,40 @@ import { useUserStore } from "@/stores/userStore";
 import { useDoctorStore } from "@/stores/getDoctorStore";
 const route = useRoute();
 const doctorStore = useDoctorStore();
-const userStore = useUserStore();
-// const months = ref([]);
 const doctorID = route.params.doctorID;
+
+const userStore = useUserStore();
+
+// Dùng computed để lấy dữ liệu từ store một cách reactive
+// Dữ liệu API trả về có dạng { success: true, data: [...] }
+const workTimeSlots = computed(() => {
+  console.log("ửod", doctorStore.doctorWorkTime[doctorID]?.data || []);
+
+  return doctorStore.doctorWorkTime[doctorID]?.data || [];
+});
+
+console.log("worlistTimeSlots123:", workTimeSlots.value);
+
+const filteredTimeSlots = computed(() => {
+  if (!selectedDate.value) return [];
+
+  const year = selectedDate.value.getFullYear();
+  const month = (selectedDate.value.getMonth() + 1).toString().padStart(2, "0");
+  const day = selectedDate.value.getDate().toString().padStart(2, "0");
+  const selectedDateStr = `${year}-${month}-${day}`;
+
+  return workTimeSlots.value.filter((slot) => slot.date === selectedDateStr);
+});
 
 const dateOfMonth = computed(
   () => doctorStore.doctorScheduleMonths[doctorID] || []
 );
 onMounted(async () => {
   await doctorStore.getDoctorDateOfMonth(doctorID);
+  // Gọi action để lấy dữ liệu và nạp vào store
+  await doctorStore.getDoctorWorkTime(doctorID);
   console.log("dateOfMonth ở component:", dateOfMonth.value);
+  console.log("Lịch làm việc lấy từ store:", workTimeSlots.value);
 });
 
 const today = new Date();
@@ -207,12 +243,7 @@ const canGoToNextMonth = computed(() => {
 
 const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 const getStartDay = (month, year) => new Date(year, month, 1).getDay();
-const Response = [
-  { start: "07:00", end: "08:00" },
-  { start: "08:00", end: "09:00" },
-  { start: "09:00", end: "10:00" },
-  { start: "10:00", end: "11:00" },
-];
+
 const calendarDays = computed(() => {
   const days = [];
   const totalDays = daysInMonth(currentMonth.value, currentYear.value);
@@ -272,12 +303,19 @@ const isSelected = (date) => {
 };
 
 const isDateSelectable = (date) => {
-  // Định dạng lại date thành YYYY-MM-DD theo local
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // So sánh từ 00:00
+
+  const dateCopy = new Date(date); // Tránh thay đổi biến gốc
+  dateCopy.setHours(0, 0, 0, 0);
+
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   const dateStr = `${year}-${month}-${day}`;
-  return dateOfMonth.value.includes(dateStr);
+
+  // ✅ Phải lớn hơn hoặc bằng hôm nay và nằm trong danh sách được phép
+  return dateCopy >= now && dateOfMonth.value.includes(dateStr);
 };
 
 const prevMonth = () => {
@@ -317,31 +355,52 @@ const selectTimeSlot = (slot) => {
   // Lấy user ID từ store (giả sử có trong userStore)
   const userID = userStore.user?.id || 1; // fallback to 1 if not available
 
-  // Format ngày được chọn
-  const selectedDateStr = selectedDate.value.toISOString().split("T")[0];
+  // Format ngày được chọn, tránh lỗi timezone
+  const date = selectedDate.value;
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const selectedDateStr = `${year}-${month}-${day}`;
 
-  // Format ngày hiện tại
-  const currentDateStr = new Date().toISOString().split("T")[0];
+  // Format ngày hiện tại, tránh lỗi timezone
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = (now.getMonth() + 1).toString().padStart(2, "0");
+  const currentDay = now.getDate().toString().padStart(2, "0");
+  const currentDateStr = `${currentYear}-${currentMonth}-${currentDay}`;
 
   // Tạo object với các thông tin
   const appointmentInfo = {
     userID: userID,
     doctorID: parseInt(doctorID),
     specialtyID: specialtyID,
+    hospitalID: hospitalID,
+    specialtyName: "ascsa",
     selectedDate: selectedDateStr,
     currentDate: currentDateStr,
     appointmentTime: {
-      start: slot.start,
-      end: slot.end,
+      start: slot.start_time,
+      end: slot.end_time,
     },
   };
 
-  console.log("=== THÔNG TIN ĐẶT LỊCH KHÁM ===");
+  // Lưu thông tin vào Pinia store
+  doctorStore.setAppointmentInfo(appointmentInfo);
+
   console.log(appointmentInfo);
 
   const dateStr = selectedDate.value.toLocaleDateString("vi-VN");
-  console.log(`Đã chọn: Ngày ${dateStr}, Giờ ${slot.start} - ${slot.end}`);
-  router.push("/chon-ho-so");
+  console.log(
+    `Đã chọn: Ngày ${dateStr}, Giờ ${slot.start_time} - ${slot.end_time}`
+  );
+  router.push({
+    path: "/chon-ho-so", // Sửa từ 'name' thành 'path'
+    query: {
+      profileID: route.query.profileID,
+      scheduleID: doctorStore.scheduleID[selectedDateStr],
+      hospitalID: route.query.hospitalID,
+    },
+  });
 };
 onMounted(() => {
   clearDate();

@@ -12,6 +12,7 @@ export const userHospitalsStore = defineStore("hospitals", {
     selectedSpecialty: null,
     selectedDoctor: null,
     selectedSchedule: null, // Thêm selectedSchedule
+    specialties: [],
   }),
   getters: {},
   actions: {
@@ -51,6 +52,8 @@ export const userHospitalsStore = defineStore("hospitals", {
     },
 
     async getSpecialtiesWithHospitalID(hospitalID) {
+      if (this.specialties.length > 0) return this.specialties;
+
       try {
         const res = await getSpecialtiesWithHospitalID(hospitalID);
         this.specialties = res;

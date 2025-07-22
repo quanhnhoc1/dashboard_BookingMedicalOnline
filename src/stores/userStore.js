@@ -8,6 +8,8 @@ import { getUserProfile } from "@/services/authService";
 import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
+import { computed } from "vue";
+import { addNewAppointmentService } from "@/services/userServices";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -99,6 +101,22 @@ export const useUserStore = defineStore("user", {
       } catch (err) {
         console.error("Error deleting user profile:", err);
         throw err;
+      }
+    },
+
+    async addNewAppointment({ profileID, doctorID, scheduleID }) {
+      try {
+        const res = await addNewAppointmentService(
+          profileID,
+          doctorID,
+          scheduleID
+        );
+        // Có thể lưu lại kết quả nếu muốn
+        this.appointment = res;
+        return res;
+      } catch (error) {
+        // Xử lý lỗi nếu cần
+        throw error;
       }
     },
   },

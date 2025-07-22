@@ -37,21 +37,23 @@
                 <div
                   class="flex items-center gap-2 cursor-pointer hover:text-sky-800 hover:bg-sky-100">
                   <i class="fi fi-rr-add-folder"></i>
-                  <RouterLink to="/user-profile" class="font-semibold"
+                  <RouterLink to="/ho-so-benh-nhan" class="font-semibold"
                     >Hồ sơ bệnh nhân</RouterLink
                   >
                 </div>
                 <div
                   class="flex items-center gap-2 cursor-pointer hover:text-sky-800 hover:bg-sky-100">
                   <i class="fi fi-rr-notebook"></i>
-                  <router-link class="font-semibold"
+                  <router-link class="font-semibold" to="/phieu-kham-benh"
                     >Phiếu khám bệnh</router-link
                   >
                 </div>
                 <div
                   class="flex items-center gap-2 cursor-pointer hover:text-sky-800 hover:bg-sky-100">
                   <i class="fi fi-rr-bell"></i>
-                  <router-link class="font-semibold">Thông báo</router-link>
+                  <router-link class="font-semibold" to="/thong-bao"
+                    >Thông báo</router-link
+                  >
                 </div>
               </div>
             </Transition>

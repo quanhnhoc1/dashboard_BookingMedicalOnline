@@ -88,10 +88,27 @@ async function createNewProfile(data) {
   }
 }
 
+async function addNewAppointmentService(profileID, doctorID, scheduleID) {
+  try {
+    const token = localStorage.getItem("token");
+    const url = `http://localhost:3000/add-new-appointment?profileID=${profileID}&doctorID=${doctorID}&scheduleID=${scheduleID}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (err) {
+    console.error("Error adding new appointment:", err.response?.data?.message);
+    throw err.response?.data?.message;
+  }
+}
+
 export {
   addAppointmentByUserServices,
   updateProfile,
   getUserProfileDetailService,
   deleteUserProfileByIDService,
   createNewProfile,
+  addNewAppointmentService,
 };

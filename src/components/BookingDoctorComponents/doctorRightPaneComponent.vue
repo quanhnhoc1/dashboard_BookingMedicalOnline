@@ -142,7 +142,6 @@ import { useRoute } from "vue-router";
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
 import { useDoctorStore } from "@/stores/getDoctorStore";
 import router from "@/router";
-import bookingDatePicker from "./bookingDatePicker.vue";
 const doctorStore = useDoctorStore();
 
 const emit = defineEmits(["book"]);
@@ -161,21 +160,19 @@ onMounted(async () => {
       );
       const doctorId = Number(data[0]?.DOCTOR_PRO_ID) || 0;
       await doctorStore.fetchDoctorSchedule(doctorId);
-      const doctorScheduleText = computed(() => {
-        const schedule = doctorStore.doctorSchedule[doctorId];
-        if (!Array.isArray(schedule) || schedule.length === 0) return null;
+      // const doctorScheduleText = computed(() => {
+      //   const schedule = doctorStore.doctorSchedule[doctorId];
+      //   if (!Array.isArray(schedule) || schedule.length === 0) return null;
 
-        // Lấy danh sách DAY_OF_WEEK không trùng lặp
-        // const days = [...new Set(schedule.map((item) => item.DAY_OF_WEEK))];
-        return days.join(", ");
-      });
+      //   // Lấy danh sách DAY_OF_WEEK không trùng lặp
+      //   // const days = [...new Set(schedule.map((item) => item.DAY_OF_WEEK))];
+      //   return days.join(", ");
+      // });
       doctors.value = data;
       for (const doctor of data) {
         await doctorStore.fetchDoctorSchedule(doctor.DOCTOR_PRO_ID);
       }
       console.log(data);
-      // console.log(doctors.value);
-      // console.log(doctorSchedule);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách bác sĩ:", err);
     }

@@ -22,7 +22,7 @@ const routes = [
     path: "/",
     name: "userDashboard",
     component: testLayout,
-    meta: { requiresAuth: true, allowedRoles: ["user"] },
+    // meta: { requiresAuth: true, allowedRoles: ["user"] },
     children: [
       {
         path: "",

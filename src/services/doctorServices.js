@@ -69,9 +69,28 @@ async function getScheduleIDByDateService(date) {
     throw err.response?.data?.message || "Không thể lấy ID lịch theo ngày";
   }
 }
+async function getScheduleWorkTimeByDoctorIDService(doctorID) {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/get-word-time-doctor/${doctorID}`
+    );
+    console.log("Doctor's work time:", response.data);
+    return response.data;
+  } catch (err) {
+    console.error(
+      "Error fetching doctor's work time:",
+      err.response?.data?.message
+    );
+    throw (
+      err.response?.data?.message ||
+      "Không thể lấy thời gian làm việc của bác sĩ"
+    );
+  }
+}
 export {
   getScheduleDayServices,
   getScheduleMonthServices,
   getScheduleIDByDateService,
   getScheduleScheduleIDServices,
+  getScheduleWorkTimeByDoctorIDService,
 };
