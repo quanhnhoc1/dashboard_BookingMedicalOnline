@@ -1,17 +1,17 @@
 <template>
-  <div>
-    <div class="flex max-w-[1170px] mx-auto my-4">
+  <div class="bg-blue-50">
+    <div class="flex max-w-[1170px] mx-auto my-4 bg-blue-50">
       <span class="text-bold text-gray-900 font-bold"
         >Trang chủ >
         <span class="text-[#00b5f1] text-m">
-          {{ searchStore.titlePage }}
+          {{ getCurrentCategoryLabel }}
         </span></span
       >
     </div>
 
     <div class="flex flex-col items-center justify-center bg-gray-100 p-10">
       <p class="text-[#00b5f1] text-2xl font-bold">
-        {{ searchStore.titlePage }}
+        {{ getCurrentCategoryLabel }}
       </p>
       <div class="title">
         <p class="m-2">
@@ -32,11 +32,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import SearchBar from "@/components/composables/SearchBar.vue";
 import CategoryTabs from "@/components/CategoryTabs.vue";
 import { useSearchStore } from "@/stores/searchStore";
 // import PageFooter from "@/layouts/PageFooter.vue";
+
 const searchStore = useSearchStore();
 
 const selectedCategory = ref("benh-vien-cong");
@@ -65,6 +66,14 @@ const categories = [
   { label: "Y tế tại nhà", value: "y-te-tai-nha", count: 10 },
   { label: "Tiêm chủng", value: "tiem-chung", count: 10 },
 ];
+
+// Computed property để lấy label của category hiện tại
+const getCurrentCategoryLabel = computed(() => {
+  const currentCategory = categories.find(
+    (cat) => cat.value === selectedCategory.value
+  );
+  return currentCategory ? currentCategory.label : "Cơ Sở Y Tế";
+});
 </script>
 
 <style scoped></style>

@@ -109,7 +109,7 @@
     <div class="flex justify-between items-center mt-4">
       <button
         @click="$router.back()"
-        class="text-blue-700 font-semibold flex items-center">
+        class="text-cyan-600 font-semibold flex items-center hover:text-cyan-500 hover:bg-cyan-50 transition-colors">
         <i class="fas fa-arrow-left mr-1"></i> Quay lại
       </button>
       <button
@@ -130,7 +130,7 @@
 </template>
 <script setup>
 import Swal from "sweetalert2";
-import { useRoute, useRouter } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import { onMounted, computed, ref } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import { useDoctorStore } from "@/stores/getDoctorStore";
@@ -172,6 +172,25 @@ async function handleConfirm() {
     errorMsg.value = "Thiếu thông tin đặt lịch!";
     return;
   }
+
+  // Hiển thị xác nhận trước khi đặt lịch
+  const confirmResult = await Swal.fire({
+    title: "Xác nhận đặt lịch",
+    text: "Bạn có chắc chắn muốn đặt lịch khám này?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Đặt lịch",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+  });
+
+  // Nếu user không xác nhận thì thoát
+  if (!confirmResult.isConfirmed) {
+    return;
+  }
+
   isLoading.value = true;
   try {
     const result = await userStore.addNewAppointment({
@@ -183,9 +202,10 @@ async function handleConfirm() {
       icon: "success",
       title: "Đặt lịch thành công!",
       text: "Đặt lịch thành công!",
+    }).then(() => {
+      // Chuyển đến trang phiếu khám bệnh sau khi đặt lịch thành công
+      router.push("/phieu-kham-benh");
     });
-    // Có thể chuyển trang hoặc reset form tại đây nếu muốn
-    // router.push({ name: "PhieuKhamBenh" });
   } catch (err) {
     Swal.fire({
       icon: "error",

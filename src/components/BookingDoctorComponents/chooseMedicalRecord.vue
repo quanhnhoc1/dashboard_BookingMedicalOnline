@@ -1,6 +1,10 @@
 <template>
   <div class="min-h-screen flex flex-col mx-auto bg-blue-50">
-    <BreadCum />
+    <BreadCum>
+      <template #middle>
+        <span class="text-cyan-500 font-semibold">Chọn hồ sơ bệnh nhân</span>
+      </template>
+    </BreadCum>
     <div class="flex flex-col items-center min-h-screen bg-blue-50 py-8">
       <h1 class="text-4xl font-bold text-cyan-500 mb-8">
         Chọn hồ sơ bệnh nhân
@@ -143,13 +147,15 @@
       </div>
 
       <!-- Nút quay lại -->
-      <div class="mt-8">
-        <button
-          @click="goBack"
-          class="flex items-center text-gray-600 hover:text-cyan-500 p-2 rounded-full hover:bg-cyan-50 transition-colors">
-          <i class="fa-solid fa-arrow-left mr-2"></i>
-          <span>Quay lại</span>
-        </button>
+      <div class="mt-8 w-full max-w-4xl">
+        <div class="flex justify-start">
+          <button
+            @click="goBack"
+            class="text-cyan-600 font-semibold flex items-center p-2 rounded-full hover:text-cyan-500 hover:bg-cyan-50 transition-colors">
+            <i class="fa-solid fa-arrow-left mr-2"></i>
+            <span>Quay lại</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

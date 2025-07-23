@@ -5,6 +5,9 @@ const url_update_profile = "http://localhost:3000/update-profile";
 const url_delete_user_profile_by_id =
   "http://localhost:3000/delete-profile-by-id";
 const url_create_new_profile = "http://localhost:3000/add-new-user-profile";
+const url_get_list_booking_ticket =
+  "http://localhost:3000/get-list-appointment";
+const url_cancel_appointment = "http://localhost:3000/cancel-appointment";
 async function addAppointmentByUserServices(doctorID, specialtyID, date) {
   try {
     const response = await axios.post(
@@ -104,6 +107,59 @@ async function addNewAppointmentService(profileID, doctorID, scheduleID) {
   }
 }
 
+async function getListBookingTicketService(apStatus) {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      `${url_get_list_booking_ticket}?apStatus=${apStatus}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("path:", response);
+    console.log("List booking tickets:", response.data);
+    console.log("path:", url_get_list_booking_ticket);
+
+    return response.data;
+  } catch (err) {
+    console.error("loi lay list booking ticket", err.response?.data?.message);
+    throw err.response?.data?.message;
+  }
+}
+async function cancelAppointmentService(appointmentData) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.put(url_cancel_appointment, appointmentData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    throw err.response?.data?.message || err.message;
+  }
+}
+async function getUserProfileWithUserIDAndIDProfileService(userID, profileID) {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      `http://localhost:3000/get-user-profile?profileID=${profileID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (err) {
+    throw err.response?.data?.message || "Không thể lấy thông tin người dùng";
+  }
+}
 export {
   addAppointmentByUserServices,
   updateProfile,
@@ -111,4 +167,7 @@ export {
   deleteUserProfileByIDService,
   createNewProfile,
   addNewAppointmentService,
+  getListBookingTicketService,
+  cancelAppointmentService,
+  getUserProfileWithUserIDAndIDProfileService,
 };

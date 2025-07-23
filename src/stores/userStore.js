@@ -1,8 +1,11 @@
 import { defineStore } from "pinia";
 import {
   addAppointmentByUserServices as addAppointmentByUser,
+  cancelAppointmentService,
   deleteUserProfileByIDService as deleteUserprofileStore,
   updateProfile,
+  getListBookingTicketService,
+  getUserProfileWithUserIDAndIDProfileService,
 } from "@/services/userServices";
 import { getUserProfile } from "@/services/authService";
 import { jwtDecode } from "jwt-decode";
@@ -18,6 +21,7 @@ export const useUserStore = defineStore("user", {
     appointment: {},
     UserProfile: [],
     UserProfileDetail: {},
+    bookingTickets: [], // Thêm state cho booking tickets
     // userWi,
   }),
   getters: {
@@ -77,7 +81,7 @@ export const useUserStore = defineStore("user", {
         const decoded = jwtDecode(this.token);
         const userId = decoded.id || decoded.userId || decoded._id;
         // Gọi service, truyền userId và profileID (nếu backend cần userId)
-        const response = await getUserProfileWithUserIDAndIDProfileSevice(
+        const response = await getUserProfileWithUserIDAndIDProfileService(
           userId,
           profileID
         );
@@ -103,6 +107,9 @@ export const useUserStore = defineStore("user", {
         throw err;
       }
     },
+    setBookingTickets(tickets) {
+      this.bookingTickets = tickets;
+    },
 
     async addNewAppointment({ profileID, doctorID, scheduleID }) {
       try {
@@ -111,33 +118,32 @@ export const useUserStore = defineStore("user", {
           doctorID,
           scheduleID
         );
-        // Có thể lưu lại kết quả nếu muốn
         this.appointment = res;
         return res;
       } catch (error) {
-        // Xử lý lỗi nếu cần
+        throw error;
+      }
+    },
+    async getListBookingTicket(apStatus) {
+      try {
+        const decoded = jwtDecode(this.token);
+        const userId = decoded.id || decoded.userId || decoded._id;
+        const res = await getListBookingTicketService(userId, apStatus);
+        this.ListBookingTicket = res;
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async cancelAppointment(appointmentData) {
+      try {
+        const res = await cancelAppointmentService(appointmentData);
+        console.log("Cancel appointment response:", res);
+        return res;
+      } catch (error) {
+        console.error("Error canceling appointment:", error);
         throw error;
       }
     },
   },
 });
-
-export async function getUserProfileWithUserIDAndIDProfileSevice(
-  userID,
-  profileID
-) {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(
-      `http://localhost:3000/get-user-profile?profileID=${profileID}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (err) {
-    throw err.response?.data?.message || "Không thể lấy thông tin người dùng";
-  }
-}

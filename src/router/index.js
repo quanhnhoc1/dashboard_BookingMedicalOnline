@@ -130,7 +130,7 @@ const routes = [
       {
         path: "/thong-bao",
         name: "ThongBao",
-        component: () => import("@/pages/user/Notifications.vue"),
+        component: () => import("@/components/composables/Notifycation.vue"),
       },
     ],
   },

@@ -1,14 +1,15 @@
 <template>
-  <div class="min-h-screen px-4 py-8 min-w-[1180px] mx-auto">
+  <div class="min-h-screen px-4 py-8 min-w-[1170px] mx-auto bg-blue-50">
     <!-- Breadcrumb -->
-    <nav class="text-sm text-gray-600 mb-4">
-      <span class="text-bold text-gray-900 font-bold">Trang chủ</span> &gt;
-      <span class="text-[#00b5f1] text-m">
-        {{ hospital.NAME }}
-      </span>
-      &gt;
-      <span class="text-cyan-600 font-semibold"> Hình thức đặt khám</span>
-    </nav>
+    <BreadCum class="max-w-[1170px] mx-auto justify-center bg-blue-50">
+      <template #middle>
+        <span class="text-[#00b5f1] font-bold">
+          {{ hospital.NAME }}
+        </span>
+        <span class="text-bold text-gray-900 font-bold"> &gt;</span>
+        <span class="text-cyan-600 font-bold"> Hình thức đặt khám</span>
+      </template>
+    </BreadCum>
 
     <!-- Tiêu đề -->
     <h2 class="text-3xl font-bold text-cyan-600 text-center">
@@ -35,12 +36,15 @@
     </div>
 
     <!-- Nút quay lại -->
-    <div class="text-center mt-10">
-      <button
-        @click="$router.back()"
-        class="text-cyan-600 font-semibold hover:underline flex items-center justify-center gap-1">
-        ⬅️ Quay lại
-      </button>
+    <div class="mt-10 max-w-[1170px] mx-auto">
+      <div class="flex justify-start">
+        <button
+          @click="$router.back()"
+          class="flex items-center text-cyan-600 hover:text-cyan-500 p-2 rounded-lg hover:bg-cyan-50 transition-colors">
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          <span class="font-medium">Quay lại</span>
+        </button>
+      </div>
     </div>
     <router-view />
   </div>
@@ -48,8 +52,12 @@
 
 <script setup>
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
+import BreadCum from "@/components/breadcrumb.vue";
 import { computed } from "vue";
 import router from "@/router";
+import datKhamChuyenKhoa from "@/assets/logo/dat-kham-chuyen-khoa.webp";
+import datKhamTheoBS from "@/assets/logo/dat-kham-theo-bs.webp";
+import datKhamTaiCoSo from "@/assets/logo/dat-kham-tai-co-so.webp";
 const hospitalStore = userHospitalsStore();
 
 const hospital = computed(() => hospitalStore.selectedHospital);
@@ -60,16 +68,16 @@ function goToBookingSpecialties(hospital) {
 const bookingOptions = [
   {
     label: "Đặt khám theo chuyên khoa",
-    icon: "/icons/speciality.png",
+    icon: datKhamChuyenKhoa,
     to: "/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa",
   },
   {
     label: "Đặt khám theo Bác sĩ",
-    icon: "/icons/doctor.png",
+    icon: datKhamTheoBS,
   },
   {
     label: "Đặt khám ngoài giờ",
-    icon: "/icons/after-hour.png",
+    icon: datKhamTaiCoSo,
   },
 ];
 </script>

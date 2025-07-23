@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-[1170px] mx-auto p-4">
     <nav class="text-sm text-gray-600 mb-6 flex items-center space-x-2">
-      <span class="font-bold">Trang chủ</span>
+      <span class="text-bold text-gray-900 font-bold">Trang chủ</span>
       <span>&gt;</span>
-      <span class="text-[#00b5f1]">{{ hospital.NAME }}</span>
+      <span class="text-[#00b5f1] font-bold">{{ hospital.NAME }}</span>
       <span>&gt;</span>
-      <span class="text-cyan-600 font-semibold">Chọn chuyên khoa</span>
+      <span class="text-cyan-600 font-bold">Chọn chuyên khoa</span>
     </nav>
     <div class="flex gap-6">
       <!-- <bookingDatePicker /> -->
@@ -46,10 +46,8 @@ const hospitalsStore = userHospitalsStore();
 const hospital = computed(() => hospitalsStore.selectedHospital);
 import doctorRightPaneComponent from "@/components/BookingDoctorComponents/doctorRightPaneComponent.vue";
 import addressHospitals from "@/components/BookingSpecialtiesComponents/addressHospitals.vue";
-// import bookingDatePicker from "@/components/BookingDoctorComponents/bookingDatePicker.vue";
 
 const selectedSpecialty = computed(() => hospitalsStore.selectedSpecialty);
-
 const handleBookDoctor = (doctor) => {
   hospitalsStore.setSelectedDoctor(doctor);
   router.push({

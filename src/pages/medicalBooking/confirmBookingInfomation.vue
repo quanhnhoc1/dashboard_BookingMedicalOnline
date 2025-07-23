@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-[1170px] mx-auto p-4">
-    <breadcrumb />
+    <breadcrumb class="bg-blue-50" />
     <div class="flex gap-6">
       <div class="w-1/3">
         <addressHospitals />

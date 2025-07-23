@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <h2 class="text-2xl font-semibold mb-4">Danh sách hồ sơ bệnh nhân</h2>
+    <h2 class="text-2xl font-semibold mb-4">Danh sách phiếu khám bệnh</h2>
 
     <div class="flex space-x-4 mb-6">
       <button
@@ -16,11 +16,15 @@
         {{ tab }}
       </button>
     </div>
+
+    <!-- Sử dụng component BookingTicketCard -->
+    <BookingTicketCard v-if="selected === 0" />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import BookingTicketCard from "@/components/BookingTicketCard.vue";
 
 const tabs = ["Đã thanh toán", "Chưa thanh toán", "Đã khám", "Đã huỷ"];
 const selected = ref(0);

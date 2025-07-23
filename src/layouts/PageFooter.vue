@@ -1,5 +1,5 @@
 <template>
-  <footer class="relative w-full pt-12">
+  <footer class="relative w-full pt-2 bg-blue-50">
     <hr class="m-4" />
     <div class="max-w-[1170px] mx-auto px-4">
       <!-- Grid content -->
@@ -127,7 +127,7 @@
         <div class="flex items-center gap-4">
           <!-- DMCA Protected Badge -->
           <div
-            class="bg-green-500 text-white px-3 py-1 rounded-lg flex items-center gap-2">
+            class="bg-green-500 text-white px-3 py-1 flex items-center gap-2">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.1 16,12.9V15.5C16,16.3 15.4,16.9 14.8,16.9H9.2C8.6,16.9 8,16.3 8,15.5V12.9C8,12.1 8.6,11.5 9.2,11.5V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11.5H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z" />

@@ -5,9 +5,9 @@
       <!-- Breadcrumb -->
       <nav class="text-sm text-gray-600 mb-4">
         <span class="text-bold text-gray-900 font-bold">Trang chủ</span> &gt;
-        <span class="text-[#00b5f1] text-m"> {{ hospital.NAME }} </span>
+        <span class="text-[#00b5f1] font-bold"> {{ hospital.NAME }} </span>
         &gt;
-        <span class="text-cyan-600 font-semibold"> Chọn chuyên khoa </span>
+        <span class="text-cyan-600 font-bold"> Chọn chuyên khoa </span>
       </nav>
 
       <!-- Tiêu đề -->
@@ -24,8 +24,9 @@
       <div class="text-center mt-10">
         <button
           @click="$router.back()"
-          class="text-cyan-600 font-semibold hover:underline flex items-center justify-center gap-1">
-          ⬅️ Quay lại
+          class="text-cyan-600 font-semibold flex items-center justify-center gap-1 hover:text-cyan-500 hover:bg-cyan-50 transition-colors">
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          <span>Quay lại</span>
         </button>
       </div>
       <router-view />

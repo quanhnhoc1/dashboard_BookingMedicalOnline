@@ -13,9 +13,10 @@
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Tìm nhanh chuyên khoa"
-          class="min-w-full px-4 py-2 text-sm focus:outline-none" />
-        <div class="px-3 bg-gray-100 text-gray-500">
+          placeholder="Tìm nhanh chuyên khoa..."
+          class="flex-1 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <div
+          class="px-4 py-3 bg-gray-50 text-gray-500 border-l border-gray-300">
           <i class="fas fa-search"></i>
         </div>
       </div>
@@ -26,19 +27,17 @@
       <!-- Danh sách nếu có -->
       <div
         v-if="filteredSpecialties.length > 0"
-        class="divide-y divide-gray-200">
+        class="divide-y divide-gray-200 bg-white rounded-lg shadow-sm overflow-hidden">
         <RouterLink
-          :to="`/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa/chon-bac-si/${specialty.SpecialtyID}/${specialty.HospitalID}`"
-          @click="selectSpecialty(specialty)"
           v-for="(specialty, index) in filteredSpecialties"
           :key="index"
-          class="py-2 cursor-pointer hover:bg-gray-50 rounded-md px-2">
+          :to="`/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa/chon-bac-si/${specialty.SpecialtyID}/${specialty.HospitalID}`"
+          @click="selectSpecialty(specialty)"
+          class="block py-3 px-4 hover:bg-gray-50 transition-all duration-200">
           <p class="font-bold text-gray-800 break-words">
             {{ specialty.SpecialtyName }}
           </p>
-          <p class="italic text-gray-600 break-words">
-            Lorem, ipsumDASDASDASDASDADS.
-          </p>
+          <p class="italic text-gray-600 text-sm break-words">Lorem, ipsum.</p>
         </RouterLink>
       </div>
 

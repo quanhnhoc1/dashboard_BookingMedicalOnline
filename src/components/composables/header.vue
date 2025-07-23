@@ -45,11 +45,11 @@
                   99+
                 </span>
               </div>
-              <!-- <button
+              <button
                 class="bg-yellow-400 hover:bg-yellow-300 text-white px-4 py-1 rounded-full flex items-center space-x-2">
                 <i class="fas fa-mobile-alt"></i>
                 <span>Tải ứng dụng</span>
-              </button> -->
+              </button>
 
               <Modal>
                 <template #trigger>
