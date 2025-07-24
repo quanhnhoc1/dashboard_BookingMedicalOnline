@@ -97,14 +97,25 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-center space-x-2">
                   <h4 class="font-medium text-gray-900 text-sm truncate">
-                    {{ result.name }}
+                    {{
+                      result.DoctorName ||
+                      result.HospitalName ||
+                      result.name ||
+                      result.fullName
+                    }}
                   </h4>
                   <i
                     v-if="result.verified"
                     class="fa-solid fa-check-circle text-blue-500 text-xs"></i>
                 </div>
                 <p class="text-xs text-gray-600 mt-1 line-clamp-2">
-                  {{ result.address }}
+                  {{
+                    result.Specialty ||
+                    result.Hospital ||
+                    result.address ||
+                    result.hospital ||
+                    result.specialty
+                  }}
                 </p>
               </div>
             </div>
@@ -118,9 +129,11 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useSearchStore } from "@/stores/searchStore";
 
+const searchStore = useSearchStore();
 const router = useRouter();
 
 // Reactive data
@@ -130,91 +143,11 @@ const isLoading = ref(false);
 const searchResults = ref([]);
 const dropdownStyle = ref({});
 
-// Mock data for demonstration
-const mockSearchResults = [
-  {
-    id: 1,
-    name: "Phòng khám Chuyên Khoa Da Trần Thịnh",
-    address: "980 Trần Hưng Đạo, Phường 7, Quận 5, TP.HCM",
-    type: "clinic",
-    verified: false,
-    logo: null,
-  },
-  {
-    id: 2,
-    name: "Bệnh viện Đa khoa Vạn Hạnh",
-    address:
-      "781/B1-B3-B5 Lê Hồng Phong, Phường Hoà Hưng, Thành Phố Hồ Chí Minh",
-    type: "hospital",
-    verified: false,
-    logo: null,
-  },
-  {
-    id: 3,
-    name: "Bệnh viện Đa khoa Đồng Nai",
-    address:
-      "02 Đồng Khởi, Phường Tam Hiệp, Tỉnh Đồng Nai (Địa chỉ cũ: 02 Đồng Khởi, Phường Tam Hòa, TP. Biên Hòa, Tỉnh Đồng Nai)",
-    type: "hospital",
-    verified: true,
-    logo: null,
-  },
-  {
-    id: 4,
-    name: "Bệnh viện Đa khoa TP Cần Thơ",
-    address: "123 Nguyễn Văn Linh, Ninh Kiều, Cần Thơ",
-    type: "hospital",
-    verified: true,
-    logo: null,
-  },
-  {
-    id: 5,
-    name: "Bệnh viện Nhi đồng Cần Thơ",
-    address: "456 Nguyễn Văn Cừ, Ninh Kiều, Cần Thơ",
-    type: "hospital",
-    verified: false,
-    logo: null,
-  },
-  {
-    id: 6,
-    name: "Phòng khám Đa khoa Tâm An",
-    address: "789 Lê Hồng Phong, Quận 10, TP.HCM",
-    type: "clinic",
-    verified: false,
-    logo: null,
-  },
-  {
-    id: 7,
-    name: "Bệnh viện Tim mạch Cần Thơ",
-    address: "321 Nguyễn Văn Linh, Cái Răng, Cần Thơ",
-    type: "hospital",
-    verified: true,
-    logo: null,
-  },
-  {
-    id: 8,
-    name: "Phòng khám Nhi khoa Sunshine",
-    address: "555 Võ Văn Tần, Quận 3, TP.HCM",
-    type: "clinic",
-    verified: false,
-    logo: null,
-  },
-  {
-    id: 9,
-    name: "Bệnh viện Đa khoa Trung ương Cần Thơ",
-    address: "789 Nguyễn Văn Linh, Ninh Kiều, Cần Thơ",
-    type: "hospital",
-    verified: true,
-    logo: null,
-  },
-  {
-    id: 10,
-    name: "Phòng khám Đa khoa Hồng Đức",
-    address: "123 Lê Hồng Phong, Quận 5, TP.HCM",
-    type: "clinic",
-    verified: false,
-    logo: null,
-  },
-];
+// Computed properties từ store
+const doctorResults = computed(() => searchStore.doctorResults || []);
+const hospitalResults = computed(() => searchStore.hospitalResults || []);
+const clinicResults = computed(() => searchStore.clinicResults || []);
+const specialtyResults = computed(() => searchStore.specialtyResults || []);
 
 // Helper function to normalize Vietnamese text
 const normalizeText = (text) => {
@@ -262,31 +195,86 @@ const performSearch = async () => {
   isLoading.value = true;
   showResults.value = true;
 
-  // Simulate API call delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    // Gọi API search từ store
+    await searchStore.searchKeyword(searchQuery.value);
 
-  // Normalize search query
-  const normalizedQuery = normalizeText(searchQuery.value);
-  const results = [];
+    // Lấy kết quả từ store và kết hợp lại
+    const allResults = [];
 
-  // Search logic - tìm kiếm không phân biệt chữ hoa/thường và có dấu/không dấu
-  if (normalizedQuery.length >= 2) {
-    results.push(
-      ...mockSearchResults.filter((item) => {
-        const normalizedName = normalizeText(item.name);
-        const normalizedAddress = normalizeText(item.address);
+    // Thêm doctors (chỉ những bác sĩ có tên)
+    if (doctorResults.value.length > 0) {
+      const validDoctors = doctorResults.value.filter(
+        (doctor) => doctor.DoctorName
+      );
+      allResults.push(
+        ...validDoctors.map((doctor) => ({
+          ...doctor,
+          type: "doctor",
+          verified: doctor.verified || false,
+          name: doctor.DoctorName || doctor.name,
+          specialty: doctor.Specialty || doctor.specialty,
+          hospital: doctor.Hospital || doctor.hospital,
+        }))
+      );
+    }
+
+    // Thêm hospitals
+    if (hospitalResults.value.length > 0) {
+      allResults.push(
+        ...hospitalResults.value.map((hospital) => ({
+          ...hospital,
+          type: "hospital",
+          verified: hospital.verified || false,
+          name: hospital.HospitalName || hospital.name,
+          address: hospital.ADDRESS || hospital.address,
+        }))
+      );
+    }
+
+    // Thêm clinics
+    if (clinicResults.value.length > 0) {
+      allResults.push(
+        ...clinicResults.value.map((clinic) => ({
+          ...clinic,
+          type: "clinic",
+          verified: clinic.verified || false,
+        }))
+      );
+    }
+
+    // Thêm specialties
+    if (specialtyResults.value.length > 0) {
+      allResults.push(
+        ...specialtyResults.value.map((specialty) => ({
+          ...specialty,
+          type: "specialty",
+          verified: specialty.verified || false,
+        }))
+      );
+    }
+
+    // Filter kết quả dựa trên query (nếu cần)
+    const normalizedQuery = normalizeText(searchQuery.value);
+    if (normalizedQuery.length >= 2) {
+      searchResults.value = allResults.filter((item) => {
+        const normalizedName = normalizeText(item.name || item.fullName || "");
+        const normalizedAddress = normalizeText(
+          item.address || item.hospital || item.specialty || ""
+        );
         const searchText = `${normalizedName} ${normalizedAddress}`;
-
         return searchText.includes(normalizedQuery);
-      })
-    );
+      });
+    } else {
+      searchResults.value = allResults;
+    }
+  } catch (error) {
+    console.error("Search error:", error);
+    searchResults.value = [];
+  } finally {
+    isLoading.value = false;
+    updateDropdownPosition();
   }
-
-  searchResults.value = results;
-  isLoading.value = false;
-
-  // Luôn cập nhật vị trí dropdown, kể cả khi không có kết quả
-  updateDropdownPosition();
 };
 
 const getIconBackground = (type) => {
@@ -314,9 +302,19 @@ const selectResult = (result) => {
 
   // Navigate based on result type
   if (result.type === "hospital") {
-    router.push(`/facilities/hospital/${result.id}`);
+    router.push(`/co-so-y-te/benh-vien/${result.HospitalID || result.id}`);
   } else if (result.type === "clinic") {
-    router.push(`/facilities/clinic/${result.id}`);
+    router.push(`/co-so-y-te/phong-kham/${result.id}`);
+  } else if (result.type === "doctor") {
+    router.push(
+      `/dat-kham-benh/dat-kham-benh-theo-bac-si/${result.DoctorID || result.id}`
+    );
+  } else if (result.type === "specialty") {
+    router.push(
+      `/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa/${
+        result.SpecialtyID || result.id
+      }`
+    );
   }
 
   // Clear search and hide results
