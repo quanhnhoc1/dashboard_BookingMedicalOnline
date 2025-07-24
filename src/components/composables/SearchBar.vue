@@ -198,7 +198,33 @@ const mockSearchResults = [
     verified: false,
     logo: null,
   },
+  {
+    id: 9,
+    name: "Bệnh viện Đa khoa Trung ương Cần Thơ",
+    address: "789 Nguyễn Văn Linh, Ninh Kiều, Cần Thơ",
+    type: "hospital",
+    verified: true,
+    logo: null,
+  },
+  {
+    id: 10,
+    name: "Phòng khám Đa khoa Hồng Đức",
+    address: "123 Lê Hồng Phong, Quận 5, TP.HCM",
+    type: "clinic",
+    verified: false,
+    logo: null,
+  },
 ];
+
+// Helper function to normalize Vietnamese text
+const normalizeText = (text) => {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[đĐ]/g, "d") // Replace đ/Đ with d
+    .replace(/[Đ]/g, "D");
+};
 
 // Methods
 const onSearchInput = () => {
@@ -239,16 +265,19 @@ const performSearch = async () => {
   // Simulate API call delay
   await new Promise((resolve) => setTimeout(resolve, 300));
 
-  // Mock search results based on query
-  const query = searchQuery.value.toLowerCase();
+  // Normalize search query
+  const normalizedQuery = normalizeText(searchQuery.value);
   const results = [];
 
-  // Search logic - trả về kết quả cho nhiều từ khóa
-  if (query.length >= 2) {
+  // Search logic - tìm kiếm không phân biệt chữ hoa/thường và có dấu/không dấu
+  if (normalizedQuery.length >= 2) {
     results.push(
       ...mockSearchResults.filter((item) => {
-        const searchText = `${item.name} ${item.address}`.toLowerCase();
-        return searchText.includes(query);
+        const normalizedName = normalizeText(item.name);
+        const normalizedAddress = normalizeText(item.address);
+        const searchText = `${normalizedName} ${normalizedAddress}`;
+
+        return searchText.includes(normalizedQuery);
       })
     );
   }
