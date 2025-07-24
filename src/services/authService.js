@@ -2,6 +2,7 @@ import axios from "axios";
 const api_login = "http://localhost:3000/login";
 const api_profile = "http://localhost:3000/profile";
 const api_google_login = "http://localhost:3000/auth/google";
+const api_register = "http://localhost:3000/register";
 
 async function Login(email, password) {
   try {
@@ -13,6 +14,30 @@ async function Login(email, password) {
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Login failed. Please try again.";
+  }
+}
+
+async function Register(userData) {
+  try {
+    console.log("=== AuthService Register Debug ===");
+    console.log("Registering user with data:", {
+      email: userData.email,
+      password: userData.password ? "[HIDDEN]" : "null",
+    });
+
+    const response = await axios.post(api_register, {
+      fullName: userData.fullName,
+      email: userData.email,
+      password: userData.password,
+    });
+
+    console.log("Register response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Register error:", error.response?.data);
+    throw (
+      error.response?.data?.message || "Registration failed. Please try again."
+    );
   }
 }
 
@@ -81,4 +106,4 @@ async function getUserProfile(token) {
     throw error.response?.data?.message || "Không thể lấy thông tin người dùng";
   }
 }
-export { Login, googleLogin, getUserProfile };
+export { Login, Register, googleLogin, getUserProfile };

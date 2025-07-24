@@ -180,9 +180,9 @@ const handleLogin = () => {
             <!-- Social Login Buttons -->
             <div class="space-y-4 flex">
               <!-- Google Login -->
-              <GoogleLogin :callback="handleGoogleLogin" />
+              <GoogleLogin :callback="handleGoogleLogin" class="abc" />
               <!-- Facebook Login -->
-              <div>
+              <!-- <div>
                 <button
                   class="w-full flex items-center justify-center gap-3 bg-white text-gray-700 border-2 border-gray-300 py-4 px-6 rounded-xl font-semibold hover:bg-gray-100 focus:ring-4 focus:ring-blue-200 transition duration-200 transform hover:scale-105 shadow-md">
                   <svg class="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
@@ -191,17 +191,17 @@ const handleLogin = () => {
                   </svg>
                   Đăng nhập bằng Facebook
                 </button>
-              </div>
+              </div> -->
             </div>
 
             <!-- Footer -->
             <div class="mt-8 text-center">
               <p class="text-sm text-gray-600">
                 Chưa có tài khoản?
-                <a
-                  href="#"
+                <RouterLink
+                  to="/register"
                   class="text-blue-600 hover:text-blue-700 font-semibold"
-                  >Đăng ký ngay</a
+                  >Đăng ký ngay</RouterLink
                 >
               </p>
             </div>
