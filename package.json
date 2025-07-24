@@ -10,18 +10,21 @@
   },
   "dependencies": {
     "@flaticon/flaticon-uicons": "^3.3.1",
+    "@google-cloud/local-auth": "^3.0.1",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
     "@vuepic/vue-datepicker": "^11.0.2",
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
+    "googleapis": "^154.0.0",
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.4.1",
     "sweetalert2": "^11.22.2",
     "swiper": "^11.2.8",
     "vue": "^3.4.15",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue3-google-login": "^2.0.33"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",

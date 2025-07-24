@@ -78,6 +78,7 @@ async function deleteUserProfileByIDService(userID, profileID) {
 async function createNewProfile(data) {
   try {
     const token = localStorage.getItem("token");
+    console.log("token:", token);
     const response = await axios.post(url_create_new_profile, data, {
       headers: {
         Authorization: `Bearer ${token}`,

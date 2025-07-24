@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
-import { Login as loginApi } from "../services/authService.js";
+import {
+  Login as loginApi,
+  googleLogin as googleLoginApi,
+} from "../services/authService.js";
 import axios from "axios";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -17,6 +20,55 @@ export const useAuthStore = defineStore("auth", {
     async login({ user: email, password }) {
       try {
         const res = await loginApi(email, password);
+
+        this.user = res.user;
+        this.token = res.token;
+
+        localStorage.setItem("user", JSON.stringify(res.user));
+        localStorage.setItem("token", res.token);
+      } catch (error) {
+        throw error;
+      }
+    },
+    async googleLogin(googleToken) {
+      try {
+        console.log("=== Google Login Debug ===");
+        console.log("Token length:", googleToken ? googleToken.length : 0);
+        console.log(
+          "Token starts with:",
+          googleToken ? googleToken.substring(0, 50) + "..." : "null"
+        );
+        console.log(
+          "Token ends with:",
+          googleToken
+            ? "..." + googleToken.substring(googleToken.length - 50)
+            : "null"
+        );
+
+        // Kiểm tra token có tồn tại và có độ dài hợp lý
+        console.log("=== Validation Debug ===");
+        console.log("Token exists:", !!googleToken);
+        console.log("Token length:", googleToken ? googleToken.length : 0);
+        console.log("Minimum required:", 20);
+        console.log(
+          "Is token valid length:",
+          googleToken ? googleToken.length >= 20 : false
+        );
+
+        if (!googleToken) {
+          console.log("❌ Token is null/undefined");
+          throw new Error("Không nhận được Google token");
+        }
+
+        // Google token/code thường có độ dài từ 50-2000 ký tự
+        if (googleToken.length < 20) {
+          console.log("❌ Token too short:", googleToken.length);
+          throw new Error("Google token quá ngắn, có thể bị lỗi");
+        }
+
+        console.log("✅ Token validation passed");
+
+        const res = await googleLoginApi(googleToken);
 
         this.user = res.user;
         this.token = res.token;
