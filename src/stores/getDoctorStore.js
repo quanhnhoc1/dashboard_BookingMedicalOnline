@@ -5,6 +5,7 @@ import {
   getScheduleIDByDateService,
   getScheduleWorkTimeByDoctorIDService,
   getAllDoctorService,
+  deleteDoctorByID,
 } from "../services/doctorServices";
 
 export const useDoctorStore = defineStore("doctor", {
@@ -80,6 +81,32 @@ export const useDoctorStore = defineStore("doctor", {
     setAppointmentInfo(info) {
       this.appointmentInfo = info;
       console.log("Appointment info set in store:", this.appointmentInfo);
+    },
+    async deleteDoctor(doctorID) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await deleteDoctorByID(doctorID);
+        console.log("Doctor deleted successfully:", response);
+
+        // Xóa bác sĩ khỏi danh sách trong store
+        this.doctors = this.doctors.filter(
+          (doctor) => doctor.doctorID !== doctorID
+        );
+
+        console.log(
+          "Updated doctors list:",
+          this.doctors.length,
+          "doctors remaining"
+        );
+
+        return response;
+      } catch (err) {
+        this.error = err.message || "Lỗi khi xóa bác sĩ";
+        throw err;
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });

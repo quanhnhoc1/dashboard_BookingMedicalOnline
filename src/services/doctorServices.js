@@ -98,6 +98,17 @@ async function getAllDoctorService() {
     throw err.response?.data?.message || "Không thể lấy danh sách bác sĩ";
   }
 }
+async function deleteDoctorByID(doctorID) {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/delete-doctor-by-id/${doctorID}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.error("Error deleting doctor:", err.response?.data?.message);
+  }
+}
 export {
   getScheduleDayServices,
   getScheduleMonthServices,
@@ -105,4 +116,5 @@ export {
   getScheduleScheduleIDServices,
   getScheduleWorkTimeByDoctorIDService,
   getAllDoctorService,
+  deleteDoctorByID,
 };

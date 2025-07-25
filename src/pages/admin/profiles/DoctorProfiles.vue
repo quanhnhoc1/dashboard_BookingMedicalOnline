@@ -30,8 +30,10 @@
         </div>
         <button
           @click="addNewDoctor"
-          class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+          :disabled="loading"
+          class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
           <svg
+            v-if="!loading"
             class="w-4 h-4 mr-1.5"
             fill="none"
             stroke="currentColor"
@@ -42,7 +44,12 @@
               stroke-width="2"
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
-          <span class="hidden sm:inline">Thêm bác sĩ mới</span>
+          <div
+            v-else
+            class="w-4 h-4 mr-1.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <span class="hidden sm:inline">{{
+            loading ? "Đang xử lý..." : "Thêm bác sĩ mới"
+          }}</span>
         </button>
       </div>
     </div>
@@ -51,48 +58,23 @@
     <div
       class="bg-white rounded-lg shadow-md p-3 md:p-4 mb-4 md:mb-6 flex-shrink-0">
       <div class="flex flex-col md:flex-row items-center gap-3">
-        <div class="relative flex-1 w-full max-w-full md:max-w-md">
-          <input
-            v-model="keyword"
-            @input="handleSearchInput"
-            @keyup.enter="fetchDoctors"
-            type="text"
-            placeholder="Tìm kiếm theo từ khóa (VD: Nguyễn tim, bệnh viện 115)..."
-            class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 text-sm" />
-          <svg
-            class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-          <!-- Clear button -->
-          <button
-            v-if="keyword"
-            @click="clearSearch"
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-            type="button">
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
+        <SearchBar
+          :placeholder="'Tìm kiếm theo từ khóa (VD: Nguyễn tim, bệnh viện 115)...'"
+          :initial-value="keyword"
+          :debounce-time="300"
+          @search="handleSearch"
+          @clear="handleClear"
+          @input-change="handleInputChange" />
         <button
           @click="fetchDoctors"
-          class="w-full md:w-auto px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-medium rounded-lg hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200">
-          Tìm kiếm
+          :disabled="loading"
+          class="w-full md:w-auto px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-medium rounded-lg hover:shadow-md transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+          <div v-if="loading" class="flex items-center gap-2">
+            <div
+              class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Đang tải...</span>
+          </div>
+          <span v-else>Tìm kiếm</span>
         </button>
       </div>
     </div>
@@ -119,7 +101,7 @@
           <div class="ml-3">
             <p class="text-xs font-medium text-gray-600">Tổng số bác sĩ</p>
             <p class="text-xl md:text-2xl font-bold text-gray-900">
-              {{ doctorStore.doctors.length }}
+              {{ doctorsDebug.length }}
             </p>
           </div>
         </div>
@@ -183,9 +165,32 @@
           <h3 class="text-base font-semibold text-gray-900">
             Danh sách bác sĩ
           </h3>
-          <p class="text-xs text-gray-500">
-            Cập nhật lần cuối: {{ lastUpdated }}
-          </p>
+          <div class="flex items-center gap-2">
+            <p class="text-xs text-gray-500">
+              Cập nhật lần cuối: {{ lastUpdated }}
+            </p>
+            <!-- Loading indicator -->
+            <div v-if="loading" class="flex items-center gap-1">
+              <div
+                class="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-xs text-cyan-600">Đang tải...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error message -->
+      <div
+        v-if="error"
+        class="px-4 py-3 bg-red-100 border-l-4 border-red-500 text-red-700">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span class="text-sm">{{ error }}</span>
         </div>
       </div>
       <div class="flex-1 min-h-0 overflow-hidden">
@@ -231,8 +236,8 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
               <tr
-                v-for="(doctor, index) in doctorStore.doctors"
-                :key="doctor.id"
+                v-for="(doctor, index) in doctorsDebug"
+                :key="doctor.doctorID"
                 class="hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200"
                 :style="{
                   backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff',
@@ -335,8 +340,10 @@
                     </button>
                     <button
                       @click="deleteDoctor(doctor.doctorID)"
-                      class="inline-flex items-center justify-center p-2 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors duration-200">
+                      :disabled="loading"
+                      class="inline-flex items-center justify-center p-2 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 disabled:bg-gray-100 disabled:text-gray-400 transition-colors duration-200">
                       <svg
+                        v-if="!loading"
                         class="w-4 h-4 md:mr-1"
                         fill="none"
                         stroke="currentColor"
@@ -347,7 +354,12 @@
                           stroke-width="2"
                           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                       </svg>
-                      <span class="hidden md:inline">Xóa</span>
+                      <div
+                        v-else
+                        class="w-4 h-4 md:mr-1 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                      <span class="hidden md:inline">{{
+                        loading ? "Đang xóa..." : "Xóa"
+                      }}</span>
                     </button>
                   </div>
                 </td>
@@ -357,10 +369,10 @@
         </div>
         <!-- Debug Info -->
         <div class="px-4 py-2 bg-yellow-100 text-yellow-800 text-sm">
-          Debug: Có {{ doctorStore.doctors.length }} bác sĩ được load
+          Debug: Có {{ doctorsDebug.length }} bác sĩ được load
         </div>
         <!-- Empty State -->
-        <div v-if="doctorStore.doctors.length === 0" class="text-center py-12">
+        <div v-if="doctorsDebug.length === 0" class="text-center py-12">
           <div
             class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
             <svg
@@ -424,22 +436,40 @@
 </style>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { storeToRefs } from "pinia";
 import { useDoctorStore } from "@/stores/getDoctorStore";
+import SearchBar from "@/components/SearchBar.vue";
+import Swal from "sweetalert2";
+
+// Cấu hình Toast notification
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end", // góc phải trên
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 const keyword = ref("");
 const doctorStore = useDoctorStore();
-let searchTimeout = null; // Biến để debounce tìm kiếm
+
+// Lấy reactive state từ store
+const { doctors, loading, error } = storeToRefs(doctorStore);
 
 // Computed properties for statistics
 const activeDoctors = computed(() => {
-  return doctorStore.doctors.filter((doctor) => doctor.status === "active")
+  return doctorsDebug.value.filter((doctor) => doctor.status === "active")
     .length;
 });
 
 const uniqueSpecialties = computed(() => {
   const specialties = new Set(
-    doctorStore.doctors.map((doctor) => doctor.specialtyName)
+    doctorsDebug.value.map((doctor) => doctor.specialtyName)
   );
   return specialties.size;
 });
@@ -454,17 +484,28 @@ const lastUpdated = computed(() => {
   });
 });
 
-// Function xử lý tìm kiếm ngay lập tức với debounce
-function handleSearchInput() {
-  // Clear timeout cũ nếu có
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
+// Debug computed để theo dõi thay đổi danh sách
+const doctorsDebug = computed(() => {
+  console.log("Doctors list updated:", doctors.value.length, "doctors");
+  return doctors.value;
+});
 
-  // Đặt timeout mới để debounce (300ms)
-  searchTimeout = setTimeout(() => {
-    performSearch();
-  }, 300);
+// Function xử lý tìm kiếm từ SearchBar component
+async function handleSearch(searchTerm) {
+  keyword.value = searchTerm;
+  await performSearch();
+}
+
+// Function xử lý khi clear search
+async function handleClear() {
+  keyword.value = "";
+  await doctorStore.fetchDoctor(); // Load lại tất cả bác sĩ
+  console.log("Search cleared, loaded all doctors");
+}
+
+// Function xử lý khi input thay đổi
+function handleInputChange(value) {
+  keyword.value = value;
 }
 
 // Function thực hiện tìm kiếm
@@ -477,7 +518,7 @@ async function performSearch() {
     }
 
     // Nếu đã có dữ liệu bác sĩ, thực hiện filter
-    if (doctorStore.doctors.length > 0) {
+    if (doctorsDebug.value.length > 0) {
       filterDoctors();
     } else {
       // Nếu chưa có dữ liệu, load từ API trước
@@ -498,7 +539,7 @@ function filterDoctors() {
   // Tách từ khóa thành các từ riêng biệt
   const keywords = keyword.value.toLowerCase().trim().split(/\s+/);
 
-  const filteredDoctors = doctorStore.doctors.filter((doctor) => {
+  const filteredDoctors = doctorsDebug.value.filter((doctor) => {
     // Tạo chuỗi tìm kiếm từ các trường thông tin
     const searchText = [
       doctor.doctorName || "",
@@ -517,23 +558,16 @@ function filterDoctors() {
   });
 
   // Cập nhật danh sách bác sĩ đã filter
-  doctorStore.doctors = filteredDoctors;
+  doctors.value = filteredDoctors;
   console.log("Filtered doctors:", filteredDoctors.length);
-}
-
-// Function xóa từ khóa tìm kiếm
-async function clearSearch() {
-  keyword.value = ""; // Clear từ khóa
-  await doctorStore.fetchDoctor(); // Load lại tất cả bác sĩ
-  console.log("Search cleared, loaded all doctors");
 }
 
 async function fetchDoctors() {
   try {
     await doctorStore.fetchDoctor();
     // Ensure doctors is always an array
-    if (!Array.isArray(doctorStore.doctors)) {
-      doctorStore.doctors = [];
+    if (!Array.isArray(doctors.value)) {
+      doctors.value = [];
     }
 
     // Nếu có từ khóa, thực hiện filter
@@ -541,10 +575,10 @@ async function fetchDoctors() {
       filterDoctors();
     }
 
-    console.log("Doctors loaded:", doctorStore.doctors.length);
+    console.log("Doctors loaded:", doctorsDebug.value.length);
   } catch (error) {
     console.error("Error fetching doctors:", error);
-    doctorStore.doctors = []; // Ensure we have an empty array on error
+    doctors.value = []; // Ensure we have an empty array on error
   }
 }
 
@@ -559,25 +593,93 @@ function addNewDoctor() {
 }
 
 async function deleteDoctor(id) {
-  if (confirm("Bạn có chắc muốn xoá bác sĩ này?")) {
-    // Xóa bác sĩ khỏi danh sách
-    const index = doctorStore.doctors.findIndex((doctor) => doctor.id === id);
-    if (index > -1) {
-      doctorStore.doctors.splice(index, 1);
-      alert("Đã xóa bác sĩ thành công!");
+  // Tìm thông tin bác sĩ để hiển thị trong confirm dialog
+  const doctor = doctors.value.find((d) => d.doctorID === id);
+  const doctorName = doctor ? doctor.doctorName : "Bác sĩ này";
+
+  // Hiển thị confirm dialog với SweetAlert
+  const result = await Swal.fire({
+    title: "Bạn có chắc chắn?",
+    html: `
+      <div class="text-left">
+        <p class="mb-3">Bạn sắp xóa bác sĩ:</p>
+        <div class="bg-gray-50 p-3 rounded-lg mb-3">
+          <p class="font-semibold text-gray-900">${
+            doctorName || "Chưa cập nhật"
+          }</p>
+          ${
+            doctor
+              ? `<p class="text-sm text-gray-600">${
+                  doctor.specialtyName || ""
+                }</p>`
+              : ""
+          }
+        </div>
+        <p class="text-red-600 text-sm">Hành động này không thể hoàn tác!</p>
+      </div>
+    `,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Có, xóa bác sĩ!",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+    customClass: {
+      popup: "rounded-lg",
+      confirmButton: "rounded-md",
+      cancelButton: "rounded-md",
+    },
+  });
+
+  if (result.isConfirmed) {
+    try {
+      // Hiển thị loading
+      Swal.fire({
+        title: "Đang xóa bác sĩ...",
+        html: `
+          <div class="text-center">
+            <div class="mb-3">
+              <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+            <p class="text-gray-700">Đang xóa bác sĩ <strong>${doctorName}</strong></p>
+            <p class="text-sm text-gray-500">Vui lòng chờ trong giây lát</p>
+          </div>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      await doctorStore.deleteDoctor(id);
+
+      console.log(
+        "Doctor deleted successfully, current doctors count:",
+        doctors.value.length
+      );
+
+      // Hiển thị Toast thông báo thành công
+      Toast.fire({
+        icon: "success",
+        title: `Đã xóa bác sĩ ${doctorName} thành công!`,
+      });
+    } catch (err) {
+      console.error("Lỗi khi xóa bác sĩ:", err);
+
+      // Hiển thị Toast thông báo lỗi
+      Toast.fire({
+        icon: "error",
+        title: `Không thể xóa bác sĩ ${doctorName}!`,
+        text: err.message || "Vui lòng thử lại sau.",
+      });
     }
   }
 }
 
 onMounted(() => {
   fetchDoctors();
-  console.log("Component mounted, doctors count:", doctorStore.doctors.length);
-});
-
-// Cleanup timeout khi component unmount
-onUnmounted(() => {
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
+  console.log("Component mounted, doctors count:", doctorsDebug.value.length);
 });
 </script>
