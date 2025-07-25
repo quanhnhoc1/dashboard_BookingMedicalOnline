@@ -53,7 +53,7 @@
 <script setup>
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
 import BreadCum from "@/components/breadcrumb.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import router from "@/router";
 import datKhamChuyenKhoa from "@/assets/logo/dat-kham-chuyen-khoa.webp";
 import datKhamTheoBS from "@/assets/logo/dat-kham-theo-bs.webp";
@@ -61,6 +61,14 @@ import datKhamTaiCoSo from "@/assets/logo/dat-kham-tai-co-so.webp";
 const hospitalStore = userHospitalsStore();
 
 const hospital = computed(() => hospitalStore.selectedHospital);
+
+// Clear data khi component mount để tránh cache
+onMounted(() => {
+  // Chỉ clear nếu không có hospital được chọn từ search
+  if (!hospital.value) {
+    hospitalStore.clearAllData();
+  }
+});
 function goToBookingSpecialties(hospital) {
   hospitalStore.setHospital(hospital);
   router.push("/dat-kham-benh/dat-kham-benh-theo-chuyen-khoa");

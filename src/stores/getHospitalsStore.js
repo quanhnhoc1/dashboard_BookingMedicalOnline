@@ -50,9 +50,20 @@ export const userHospitalsStore = defineStore("hospitals", {
     clearHospital() {
       this.selectedHospital = null;
     },
+    clearAllData() {
+      this.selectedHospital = null;
+      this.selectedSpecialty = null;
+      this.selectedDoctor = null;
+      this.selectedSchedule = null;
+      this.specialties = [];
+    },
+    clearSpecialties() {
+      this.specialties = [];
+    },
 
     async getSpecialtiesWithHospitalID(hospitalID) {
-      if (this.specialties.length > 0) return this.specialties;
+      // Clear specialties cũ để tránh cache sai
+      this.specialties = [];
 
       try {
         const res = await getSpecialtiesWithHospitalID(hospitalID);

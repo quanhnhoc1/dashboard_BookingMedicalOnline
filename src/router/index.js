@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import homePage from "../components/homePage.vue";
 import adminLayout from "../layouts/AdminLayout.vue";
-import ClinicRevenue from "@/pages/admin/revenue/ClinicRevenue.vue";
-import DoctorRevenue from "@/pages/admin/revenue/DoctorRevenue.vue";
+// import ClinicRevenue from "@/pages/admin/revenue/ClinicRevenue.vue";
+// import DoctorRevenue from "@/pages/admin/revenue/DoctorRevenue.vue";
 import testLayout from "@/layouts/test.layout.vue";
 import publicHospital from "@/pages/medicalFacilities/PublicHospitalPage.vue";
 import privateHospital from "@/pages/medicalFacilities/PrivateHospitalPage.vue";
@@ -17,6 +17,7 @@ import BookingWithDoctorPage from "@/pages/medicalBooking/bookingWithDoctorPage.
 import ChooseMedicalRecord from "@/components/BookingDoctorComponents/chooseMedicalRecord.vue";
 import UpdateUserInfo from "@/pages/user/updateUserInfo.vue";
 import confirmBookingInfomation from "@/pages/medicalBooking/confirmBookingInfomation.vue";
+import DoctorProfiles from "@/pages/admin/profiles/DoctorProfiles.vue";
 const routes = [
   {
     path: "/",
@@ -156,15 +157,15 @@ const routes = [
         component: homePage,
       },
       {
-        path: "/admin/revenue-doctor", // ✅
-        name: "doctor-revenue",
-        component: DoctorRevenue,
+        path: "profiles/doctor-profiles", // ✅
+        name: "DoctorProfiles",
+        component: DoctorProfiles,
       },
-      {
-        path: "/revenue-clinic", // ✅
-        name: "clinic-revenue",
-        component: ClinicRevenue,
-      },
+      // {
+      //   path: "profiles/user-profiles", // ✅
+      //   name: "UserProfiles",
+      //   component: UserProfiles,
+      // },
     ],
   },
 ];

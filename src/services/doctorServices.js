@@ -88,10 +88,21 @@ async function getScheduleWorkTimeByDoctorIDService(doctorID) {
   }
 }
 
+async function getAllDoctorService() {
+  try {
+    const response = await axios.get("http://localhost:3000/get-all-doctors");
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.error("Error fetching all doctors:", err.response?.data?.message);
+    throw err.response?.data?.message || "Không thể lấy danh sách bác sĩ";
+  }
+}
 export {
   getScheduleDayServices,
   getScheduleMonthServices,
   getScheduleIDByDateService,
   getScheduleScheduleIDServices,
   getScheduleWorkTimeByDoctorIDService,
+  getAllDoctorService,
 };

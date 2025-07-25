@@ -40,14 +40,19 @@ import specitaltiesComponent from "@/components/BookingSpecialtiesComponents/spe
 import HeaderWithPhoneCallNumber from "@/components/headerWithPhoneCallNumber.vue";
 import { computed, onMounted } from "vue";
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
+import { useRoute } from "vue-router";
+import { getHospitalById } from "@/services/hospitalService.js";
+
 const hospitalsStore = userHospitalsStore();
+const route = useRoute();
 const hospital = computed(() => hospitalsStore.selectedHospital);
 
-// console.log(hospital.value);
-onMounted(() => {
+onMounted(async () => {
+  // Kiểm tra nếu có hospital trong store
   if (hospital.value && hospital.value.ID) {
     hospitalsStore.getSpecialtiesWithHospitalID(hospital.value.ID);
   } else {
+    // Nếu không có hospital, có thể cần lấy từ URL params nếu có
     console.warn("Chưa có hospital được chọn!");
   }
 });

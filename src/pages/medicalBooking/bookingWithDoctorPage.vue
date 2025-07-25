@@ -40,6 +40,7 @@ import { computed, onMounted, ref } from "vue";
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
 import { useRouter, useRoute } from "vue-router";
 import doctorNameBooking from "@/components/doctorNameBooking.vue";
+import { getHospitalById } from "@/services/hospitalService.js";
 const router = useRouter();
 const route = useRoute();
 const hospitalsStore = userHospitalsStore();
@@ -60,11 +61,32 @@ const handleBookDoctor = (doctor) => {
   });
 };
 
-onMounted(() => {
-  if (hospital.value && hospital.value.ID) {
+onMounted(async () => {
+  // Kiểm tra nếu có hospital trong store và ID khớp với URL params
+  if (hospital.value && hospital.value.ID === route.params.hospitalID) {
     hospitalsStore.getSpecialtiesWithHospitalID(hospital.value.ID);
   } else {
-    console.warn("Chưa có hospital được chọn!");
+    // Nếu không có hospital hoặc ID không khớp, lấy thông tin từ URL params
+    console.log(
+      "Lấy thông tin bệnh viện từ URL params:",
+      route.params.hospitalID
+    );
+
+    try {
+      // Lấy thông tin bệnh viện từ API dựa trên hospitalID
+      const hospitalData = await getHospitalById(route.params.hospitalID);
+      if (hospitalData) {
+        hospitalsStore.setHospital(hospitalData);
+        hospitalsStore.getSpecialtiesWithHospitalID(hospitalData.ID);
+      } else {
+        console.error(
+          "Không tìm thấy thông tin bệnh viện với ID:",
+          route.params.hospitalID
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin bệnh viện:", error);
+    }
   }
 });
 </script>

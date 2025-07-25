@@ -4,6 +4,7 @@ import {
   getScheduleMonthServices,
   getScheduleIDByDateService,
   getScheduleWorkTimeByDoctorIDService,
+  getAllDoctorService,
 } from "../services/doctorServices";
 
 export const useDoctorStore = defineStore("doctor", {
@@ -60,6 +61,20 @@ export const useDoctorStore = defineStore("doctor", {
         console.log("Doctor's work time:", response);
       } catch (err) {
         this.error = err.message || "Lỗi khi lấy thời gian làm việc của bác sĩ";
+      }
+    },
+    async fetchDoctor() {
+      try {
+        const response = await getAllDoctorService();
+        // Kiểm tra xem response có phải là array không
+        this.doctors = Array.isArray(response)
+          ? response
+          : response?.data || [];
+        console.log("Fetched doctors:", this.doctors);
+      } catch (err) {
+        console.error("Error fetching doctors:", err);
+        this.error = err.message || "Lỗi khi lấy thông tin bác sĩ";
+        this.doctors = []; // Set empty array on error
       }
     },
     setAppointmentInfo(info) {

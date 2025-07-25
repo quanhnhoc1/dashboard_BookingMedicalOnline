@@ -72,9 +72,29 @@ async function getDoctorFromSpecialtyIDServicesAndIDHospital(
   }
 }
 
+async function getHospitalById(hospitalID) {
+  try {
+    // Lấy tất cả bệnh viện công và tư
+    const [publicHospitals, privateHospitals] = await Promise.all([
+      axios.get(url_hospitals_public),
+      axios.get(url_hospitals_private),
+    ]);
+
+    // Tìm bệnh viện theo ID
+    const allHospitals = [...publicHospitals.data, ...privateHospitals.data];
+    const hospital = allHospitals.find((h) => h.ID === hospitalID);
+
+    return hospital || null;
+  } catch (error) {
+    console.error("Error fetching hospital by ID:", error);
+    throw error.response?.data?.message || "Không thể lấy thông tin bệnh viện";
+  }
+}
+
 export {
   getHospitalsPrivate,
   getHospitalsPublic,
   getSpecialtiesWithHospitalID,
   getDoctorFromSpecialtyIDServicesAndIDHospital,
+  getHospitalById,
 };

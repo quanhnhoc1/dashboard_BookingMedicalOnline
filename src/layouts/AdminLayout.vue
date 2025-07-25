@@ -38,12 +38,12 @@ const toggleProfileDropdown = () => {
 <template>
   <div class="w-screen h-screen flex select-none">
     <!-- Sidebar -->
-    <div v-show="showSide" class="w-[400px] h-full bg-gray-200 text-white">
+    <div v-show="showSide" class="min-w-[300px] h-full bg-gray-200 text-white">
       <div class="h-[50px] bg-gray-900 flex items-center px-5">
         <h3 class="font-bold text-xl">Admin Dashboard</h3>
       </div>
       <div
-        class="h-[calc(100vh-50px)] bg-gray-800 py-5 px-5 flex flex-col justify-between">
+        class="h-[calc(100vh-0px)] bg-gray-800 py-5 px-5 flex flex-col justify-between">
         <div class="space-y-2">
           <router-link to="/home" class="menu-item">🏠 Home</router-link>
           <!-- <router-link to="/profile" class="menu-item">👤 Profile</router-link> -->
@@ -59,11 +59,13 @@ const toggleProfileDropdown = () => {
             <div
               v-show="isProfileOpen"
               class="ml-4 mt-1 space-y-1 transition-all duration-200">
-              <router-link to="/admin/revenue-doctor" class="menu-item"
-                >📊 Doanh thu bác sĩ</router-link
+              <router-link
+                to="/admin/profiles/doctor-profiles"
+                class="menu-item"
+                >📊 Quản lý bác sĩ</router-link
               >
-              <router-link to="/revenue-clinic" class="menu-item"
-                >🏥 Doanh thu bệnh viện</router-link
+              <router-link to="/admin/profiles/user-profiles" class="menu-item"
+                >👤 Quản lý người dùng</router-link
               >
             </div>
           </div>
@@ -71,16 +73,13 @@ const toggleProfileDropdown = () => {
           <router-link to="/dashboard" class="menu-item"
             >💬 Messages</router-link
           >
-          <!-- <router-link to="/download" class="menu-item"
-            >⬇️ Download</router-link
-          > -->
         </div>
         <router-link to="/setting" class="menu-item">⚙️ Setting</router-link>
       </div>
     </div>
 
     <!-- Main Content -->
-    <div class="w-full h-full bg-gray-400">
+    <div class="w-full h-full flex flex-col bg-gray-400">
       <!-- Top Navbar -->
       <div
         class="h-[50px] bg-gray-100 flex items-center shadow-sm px-5 border-b relative">
@@ -143,9 +142,9 @@ const toggleProfileDropdown = () => {
       </div>
 
       <!-- Main View -->
-      <div class="h-[calc(100vh-50px)] bg-gray-50 p-5">
-        <div class="border border-gray-300 rounded-md p-5 h-full">
-          <router-view></router-view>
+      <div class="flex-1 min-h-0 bg-gray-50 p-0">
+        <div class="h-full w-full flex flex-col">
+          <router-view />
         </div>
       </div>
     </div>
