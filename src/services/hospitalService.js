@@ -90,11 +90,34 @@ async function getHospitalById(hospitalID) {
     throw error.response?.data?.message || "Không thể lấy thông tin bệnh viện";
   }
 }
-
+async function getAllHospitals() {
+  try {
+    const response = await axios.get("http://localhost:3000/get-all-hospitals");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching hospitals:", error);
+    throw error.response?.data?.message || "Không thể lấy thông tin bệnh viện";
+  }
+}
+async function getAllSpecialties() {
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/get-all-specialties"
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching specialties:", error);
+    throw (
+      error.response?.data?.message || "Không thể lấy thông tin chuyên khoa"
+    );
+  }
+}
 export {
   getHospitalsPrivate,
   getHospitalsPublic,
   getSpecialtiesWithHospitalID,
   getDoctorFromSpecialtyIDServicesAndIDHospital,
   getHospitalById,
+  getAllHospitals,
+  getAllSpecialties,
 };

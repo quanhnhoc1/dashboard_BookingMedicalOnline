@@ -109,6 +109,21 @@ async function deleteDoctorByID(doctorID) {
     console.error("Error deleting doctor:", err.response?.data?.message);
   }
 }
+
+async function updateDoctorProfile(doctorID, doctorData) {
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/update-doctor-profile/${doctorID}`,
+      doctorData
+    );
+    console.log("Doctor updated successfully:", response.data);
+    return response.data;
+  } catch (err) {
+    console.error("Error updating doctor:", err.response?.data?.message);
+    throw err.response?.data?.message || "Không thể cập nhật thông tin bác sĩ";
+  }
+}
+
 export {
   getScheduleDayServices,
   getScheduleMonthServices,
@@ -117,4 +132,5 @@ export {
   getScheduleWorkTimeByDoctorIDService,
   getAllDoctorService,
   deleteDoctorByID,
+  updateDoctorProfile,
 };

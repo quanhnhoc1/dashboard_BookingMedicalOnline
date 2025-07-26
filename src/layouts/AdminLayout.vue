@@ -1,5 +1,5 @@
 <script setup>
-import SearchBar from "@/components/composables/SearchBar.vue";
+// import SearchBar from "@/components/composables/SearchBar.vue";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
@@ -95,7 +95,7 @@ const toggleProfileDropdown = () => {
         </div>
 
         <!-- Search Bar -->
-        <SearchBar />
+        <!-- <SearchBar /> -->
 
         <!-- User Dropdown -->
         <div class="w-[200px] ml-auto relative">

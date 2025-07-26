@@ -58,7 +58,7 @@
     <div
       class="bg-white rounded-lg shadow-md p-3 md:p-4 mb-4 md:mb-6 flex-shrink-0">
       <div class="flex flex-col md:flex-row items-center gap-3">
-        <SearchBar
+        <SearchBarAdmin
           :placeholder="'Tìm kiếm theo từ khóa (VD: Nguyễn tim, bệnh viện 115)...'"
           :initial-value="keyword"
           :debounce-time="300"
@@ -238,10 +238,11 @@
               <tr
                 v-for="(doctor, index) in doctorsDebug"
                 :key="doctor.doctorID"
-                class="hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200"
+                class="hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 cursor-pointer"
                 :style="{
                   backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff',
-                }">
+                }"
+                @click="showDoctorInfo(doctor)">
                 <td class="px-2 md:px-4 py-3 whitespace-nowrap">
                   <div
                     class="flex items-center justify-center w-6 h-6 bg-gray-100 rounded-full">
@@ -323,7 +324,7 @@
                 <td class="px-2 md:px-4 py-3 whitespace-nowrap">
                   <div class="flex items-center gap-1 md:gap-2">
                     <button
-                      @click="editDoctor(doctor)"
+                      @click.stop="editDoctor(doctor)"
                       class="inline-flex items-center justify-center p-2 text-xs font-medium text-cyan-600 bg-cyan-50 rounded-md hover:bg-cyan-100 transition-colors duration-200">
                       <svg
                         class="w-4 h-4 md:mr-1"
@@ -339,7 +340,7 @@
                       <span class="hidden md:inline">Sửa</span>
                     </button>
                     <button
-                      @click="deleteDoctor(doctor.doctorID)"
+                      @click.stop="deleteDoctor(doctor.doctorID)"
                       :disabled="loading"
                       class="inline-flex items-center justify-center p-2 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 disabled:bg-gray-100 disabled:text-gray-400 transition-colors duration-200">
                       <svg
@@ -412,26 +413,85 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Update Doctor -->
+    <div v-if="showUpdateModal" class="modal-overlay">
+      <div class="modal-content">
+        <div
+          class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-900">
+            Cập nhật thông tin bác sĩ
+          </h2>
+          <button
+            @click="closeUpdateModal"
+            class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="p-6">
+          <modalUpdateDoctor
+            v-if="selectedDoctor"
+            :user="selectedDoctor"
+            :address-store="hospitalsStore"
+            @close="closeUpdateModal"
+            @updated="handleDoctorUpdated" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Doctor Info -->
+    <doctorInfoModal
+      :show="showInfoModal"
+      :doctor="selectedDoctorForInfo"
+      :loading="false"
+      @close="closeInfoModal"
+      @edit="handleEditFromInfo" />
   </div>
 </template>
 
 <style scoped>
-.overflow-y-auto {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
+/* Modal centering styles */
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  padding: 1rem;
 }
-.overflow-y-auto::-webkit-scrollbar {
-  width: 6px;
+
+.modal-content {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 56rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(1);
+  transition: all 0.3s ease-in-out;
 }
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: #f7fafc;
-}
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 3px;
-}
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95vw;
+    margin: 0.5rem;
+  }
 }
 </style>
 
@@ -439,9 +499,13 @@
 import { ref, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useDoctorStore } from "@/stores/getDoctorStore";
-import SearchBar from "@/components/SearchBar.vue";
+import SearchBarAdmin from "@/components/adminComponents/SearchBarAdmin.vue";
 import Swal from "sweetalert2";
-
+import modalUpdateDoctor from "@/components/adminComponents/modalUpdateDoctor.vue";
+import doctorInfoModal from "@/components/adminComponents/doctorInfoModal.vue";
+import { useAddressStore } from "@/stores/getAddressStore";
+import { userHospitalsStore } from "@/stores/getHospitalsStore";
+const hospitalsStore = userHospitalsStore();
 // Cấu hình Toast notification
 const Toast = Swal.mixin({
   toast: true,
@@ -457,7 +521,10 @@ const Toast = Swal.mixin({
 
 const keyword = ref("");
 const doctorStore = useDoctorStore();
-
+const addressStore = useAddressStore();
+const { allHospitals, allSpecialties } = storeToRefs(hospitalsStore);
+console.log("allhospitals", allHospitals.value);
+console.log("allspecialties", allSpecialties.value);
 // Lấy reactive state từ store
 const { doctors, loading, error } = storeToRefs(doctorStore);
 
@@ -489,6 +556,12 @@ const doctorsDebug = computed(() => {
   console.log("Doctors list updated:", doctors.value.length, "doctors");
   return doctors.value;
 });
+
+// Modal state
+const showUpdateModal = ref(false);
+const selectedDoctor = ref(null);
+const showInfoModal = ref(false);
+const selectedDoctorForInfo = ref(null);
 
 // Function xử lý tìm kiếm từ SearchBar component
 async function handleSearch(searchTerm) {
@@ -582,10 +655,27 @@ async function fetchDoctors() {
   }
 }
 
-function editDoctor(doctor) {
-  // Mở modal hoặc redirect tới trang chỉnh sửa
-  console.log("Edit:", doctor);
-  alert(`Chỉnh sửa bác sĩ: ${doctor.full_name}`);
+async function editDoctor(doctor) {
+  // Đảm bảo dữ liệu đã được load
+  if (
+    hospitalsStore.allHospitals.length === 0 ||
+    hospitalsStore.allSpecialties.length === 0
+  ) {
+    try {
+      await hospitalsStore.getAllHospitals();
+      await hospitalsStore.getAllSpecialties();
+    } catch (error) {
+      console.error("Failed to load data for modal:", error);
+    }
+  }
+
+  selectedDoctor.value = doctor;
+  showUpdateModal.value = true;
+}
+
+function showDoctorInfo(doctor) {
+  selectedDoctorForInfo.value = doctor;
+  showInfoModal.value = true;
 }
 
 function addNewDoctor() {
@@ -678,8 +768,36 @@ async function deleteDoctor(id) {
   }
 }
 
-onMounted(() => {
+function closeUpdateModal() {
+  showUpdateModal.value = false;
+  selectedDoctor.value = null;
+}
+
+function closeInfoModal() {
+  showInfoModal.value = false;
+  selectedDoctorForInfo.value = null;
+}
+
+function handleDoctorUpdated() {
+  closeUpdateModal();
   fetchDoctors();
-  console.log("Component mounted, doctors count:", doctorsDebug.value.length);
+}
+
+function handleEditFromInfo(doctor) {
+  closeInfoModal();
+  editDoctor(doctor);
+}
+
+onMounted(async () => {
+  try {
+    fetchDoctors();
+    await hospitalsStore.getAllHospitals(); // GỌI ACTION ĐỂ LẤY DỮ LIỆU
+    await hospitalsStore.getAllSpecialties();
+    console.log("Component mounted, doctors count:", doctorsDebug.value.length);
+    console.log("Hospitals loaded:", hospitalsStore.allHospitals.length);
+    console.log("Specialties loaded:", hospitalsStore.allSpecialties.length);
+  } catch (err) {
+    console.error("Failed to load hospital/specialty data", err);
+  }
 });
 </script>

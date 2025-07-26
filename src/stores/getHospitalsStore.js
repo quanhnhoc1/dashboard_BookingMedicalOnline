@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import {
   getDoctorFromSpecialtyIDServicesAndIDHospital,
   getHospitalsPrivate as getHospitalsPrivateAPI,
+  getAllHospitals as getAllHospitalsAPI,
+  getAllSpecialties as getAllSpecialtiesAPI,
 } from "../services/hospitalService.js";
 import { getHospitalsPublic as getHospitalsPublicAPI } from "../services/hospitalService.js";
 import { getSpecialtiesWithHospitalID } from "../services/hospitalService.js";
@@ -11,8 +13,10 @@ export const userHospitalsStore = defineStore("hospitals", {
     selectedHospital: null,
     selectedSpecialty: null,
     selectedDoctor: null,
-    selectedSchedule: null, // Thêm selectedSchedule
     specialties: [],
+    selectedSchedule: null, // Thêm selectedSchedule
+    allSpecialties: [],
+    allHospitals: [],
   }),
   getters: {},
   actions: {
@@ -84,6 +88,25 @@ export const userHospitalsStore = defineStore("hospitals", {
           specialtyID,
           hospitalID
         );
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async getAllHospitals() {
+      try {
+        const res = await getAllHospitalsAPI();
+        this.allHospitals = res;
+        return res;
+      } catch (error) {
+        throw error;
+      }
+    },
+    async getAllSpecialties() {
+      try {
+        const res = await getAllSpecialtiesAPI();
+        this.allSpecialties = res;
         return res;
       } catch (error) {
         throw error;
