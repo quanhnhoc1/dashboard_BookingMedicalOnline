@@ -161,6 +161,17 @@ const routes = [
         name: "DoctorProfiles",
         component: DoctorProfiles,
       },
+      {
+        path: "profiles/add-new-doctor", // ✅
+        name: "AddNewDoctor",
+        component: () =>
+          import("@/components/adminComponents/AddNewDoctor.vue"),
+      },
+      {
+        path: "schedules/doctor-schedules", // ✅
+        name: "DoctorSchedules",
+        component: () => import("@/pages/admin/schedules/doctorSchedules.vue"),
+      },
       // {
       //   path: "profiles/user-profiles", // ✅
       //   name: "UserProfiles",

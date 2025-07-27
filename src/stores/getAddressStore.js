@@ -30,5 +30,13 @@ export const useAddressStore = defineStore("address", {
       this.wards = await getWards(this.selectedProvince, this.selectedDistrict);
       this.selectedWard = "";
     },
+    resetAddress() {
+      this.selectedProvince = "";
+      this.selectedDistrict = "";
+      this.selectedWard = "";
+      this.detailedAddress = "";
+      this.districts = [];
+      this.wards = [];
+    },
   },
 });

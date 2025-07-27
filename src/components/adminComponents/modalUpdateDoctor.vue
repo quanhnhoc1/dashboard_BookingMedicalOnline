@@ -1,9 +1,9 @@
 <template>
-  <form class="space-y-6" @submit.prevent="handleSubmit">
+  <form class="space-y-4 md:space-y-6" @submit.prevent="handleSubmit">
     <!-- Thông tin chung -->
     <div>
       <h2 class="text-lg font-bold mb-2 border-b pb-1">Thông tin bác sĩ</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div>
           <label class="block font-medium"
             >Họ và tên <span class="text-red-500">*</span></label
@@ -84,18 +84,110 @@
       </div>
     </div>
 
+    <!-- Thông tin địa chỉ -->
+    <div>
+      <h2 class="text-lg font-bold mb-2 border-b pb-1">Thông tin địa chỉ</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div>
+          <label class="block font-medium"
+            >Tỉnh/Thành phố <span class="text-red-500">*</span></label
+          >
+          <select
+            class="input-form"
+            v-model="addressStore.selectedProvince"
+            @change="addressStore.fetchDistricts()">
+            <option value="">Chọn tỉnh/thành phố</option>
+            <option
+              v-for="province in addressStore.provinces"
+              :key="province.Province"
+              :value="province.Province">
+              {{ province.Province }}
+            </option>
+          </select>
+          <div
+            v-if="addressStore.provinces.length === 0"
+            class="text-xs text-gray-500 mt-1">
+            Đang tải danh sách tỉnh/thành phố...
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium"
+            >Quận/Huyện <span class="text-red-500">*</span></label
+          >
+          <select
+            class="input-form"
+            v-model="addressStore.selectedDistrict"
+            @change="addressStore.fetchWards()"
+            :disabled="!addressStore.selectedProvince">
+            <option value="">Chọn quận/huyện</option>
+            <option
+              v-for="district in addressStore.districts"
+              :key="district.name"
+              :value="district.name">
+              {{ district.name }}
+            </option>
+          </select>
+          <div
+            v-if="
+              addressStore.selectedProvince &&
+              addressStore.districts.length === 0
+            "
+            class="text-xs text-gray-500 mt-1">
+            Đang tải danh sách quận/huyện...
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium"
+            >Phường/Xã <span class="text-red-500">*</span></label
+          >
+          <select
+            class="input-form"
+            v-model="addressStore.selectedWard"
+            :disabled="!addressStore.selectedDistrict">
+            <option value="">Chọn phường/xã</option>
+            <option
+              v-for="ward in addressStore.wards"
+              :key="ward.name"
+              :value="ward.name">
+              {{ ward.name }}
+            </option>
+          </select>
+          <div
+            v-if="
+              addressStore.selectedDistrict && addressStore.wards.length === 0
+            "
+            class="text-xs text-gray-500 mt-1">
+            Đang tải danh sách phường/xã...
+          </div>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block font-medium"
+            >Địa chỉ chi tiết <span class="text-red-500">*</span></label
+          >
+          <input
+            type="text"
+            class="input-form"
+            v-model="addressStore.detailedAddress"
+            placeholder="Số nhà, tên đường, ấp thôn xóm..." />
+          <span class="text-xs text-gray-500"
+            >(không bao gồm tỉnh/thành, quận/huyện, phường/xã)</span
+          >
+        </div>
+      </div>
+    </div>
+
     <!-- Thông tin bổ sung -->
     <div>
       <h2 class="text-lg font-bold mb-2 border-b pb-1">Thông tin bổ sung</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div class="md:col-span-2">
           <label class="block font-medium">Mô tả</label>
           <textarea
             class="input-form h-20 resize-none"
             v-model="doctor.description"
             placeholder="Mô tả về bác sĩ, chuyên môn, kinh nghiệm..."></textarea>
         </div>
-        <div>
+        <div class="md:col-span-2">
           <label class="block font-medium">Ghi chú</label>
           <textarea
             class="input-form h-20 resize-none"
@@ -105,17 +197,17 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 pt-4 border-t">
+    <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t">
       <button
         type="button"
         @click="$emit('close')"
-        class="px-6 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 font-semibold rounded-lg transition-colors duration-200">
+        class="px-4 md:px-6 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 font-semibold rounded-lg transition-colors duration-200">
         Hủy
       </button>
       <button
         type="submit"
         :disabled="loading"
-        class="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+        class="px-4 md:px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
         <div v-if="loading" class="flex items-center gap-2">
           <div
             class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -128,9 +220,10 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import Swal from "sweetalert2";
 import { updateDoctorProfile } from "@/services/doctorServices";
+import { useAddressStore } from "@/stores/getAddressStore";
 
 const props = defineProps({
   user: Object,
@@ -141,15 +234,14 @@ const emit = defineEmits(["close", "updated"]);
 
 const loading = ref(false);
 
-// Tạo reactive copy của doctor data
+const addressStore = useAddressStore();
+
 const doctor = ref({});
 
-// Watch props.user để cập nhật doctor data
 watch(
   () => props.user,
   (newUser) => {
     if (newUser) {
-      // Map dữ liệu từ user (doctor) sang doctor object
       doctor.value = {
         doctorID: newUser.doctorID,
         fullName: newUser.doctorName || "",
@@ -157,9 +249,9 @@ watch(
         email: newUser.email || "",
         degree: newUser.degree || "",
         specialtyID: newUser.specialtyID || "",
-        specialtyName: newUser.specialtyName || "", // For display in dropdown
+        specialtyName: newUser.specialtyName || "",
         hospitalID: newUser.hospitalID || "",
-        hospitalName: newUser.hospitalName || "", // For display in dropdown
+        hospitalName: newUser.hospitalName || "",
         experience_years: newUser.experience_years || 0,
         status: newUser.status || "active",
         description: newUser.description || "",
@@ -185,16 +277,76 @@ watch(
         }
       }
 
-      console.log("Modal - doctor data mapped:", doctor.value);
+      // Xử lý địa chỉ nếu có
+      if (newUser.ADDRESS || newUser.address) {
+        const addressToProcess = newUser.ADDRESS || newUser.address;
+        const addressParts = splitAddress(addressToProcess);
+        addressStore.detailedAddress = addressParts.street;
+
+        // Gán tỉnh/thành
+        const matchedProvince = addressStore.provinces.find(
+          (p) => normalize(p.Province) === normalize(addressParts.province)
+        );
+        if (matchedProvince) {
+          addressStore.selectedProvince = matchedProvince.Province;
+          // Load districts
+          addressStore.fetchDistricts().then(() => {
+            // Gán quận/huyện
+            const matchedDistrict = addressStore.districts.find(
+              (d) => normalize(d.name) === normalize(addressParts.district)
+            );
+            if (matchedDistrict) {
+              addressStore.selectedDistrict = matchedDistrict.name;
+              // Load wards
+              addressStore.fetchWards().then(() => {
+                // Gán phường/xã
+                const matchedWard = addressStore.wards.find(
+                  (w) => normalize(w.name) === normalize(addressParts.ward)
+                );
+                if (matchedWard) {
+                  addressStore.selectedWard = matchedWard.name;
+                }
+              });
+            }
+          });
+        }
+      }
     }
   },
   { immediate: true, deep: true }
 );
 
-// Debug để kiểm tra dữ liệu
-console.log("Modal - addressStore:", props.addressStore);
-console.log("Modal - allHospitals:", props.addressStore?.allHospitals);
-console.log("Modal - allSpecialties:", props.addressStore?.allSpecialties);
+// Hàm tách địa chỉ
+function splitAddress(address) {
+  if (!address)
+    return {
+      street: "",
+      ward: "",
+      district: "",
+      province: "",
+    };
+  const parts = address.split(",");
+  const trimmed = parts.map((p) => p.trim());
+  return {
+    street: trimmed[0] || "",
+    ward: trimmed[1] || "",
+    district: trimmed[2] || "",
+    province: trimmed[3] || "",
+  };
+}
+
+// Hàm chuẩn hóa chuỗi để so sánh
+function normalize(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // bỏ dấu tiếng Việt
+    .trim()
+    .toLowerCase();
+}
+
+onMounted(async () => {
+  await addressStore.fetchProvinces();
+});
 
 // Computed properties để đảm bảo reactivity
 const hospitals = computed(() => {
@@ -204,13 +356,8 @@ const hospitals = computed(() => {
 });
 const specialties = computed(() => {
   const data = props.addressStore?.allSpecialties || [];
-  console.log("Modal - specialties computed:", data);
   return data;
 });
-
-// Debug để kiểm tra khi modal mở
-console.log("Modal opened - hospitals count:", hospitals.value.length);
-console.log("Modal opened - specialties count:", specialties.value.length);
 
 // Watch for changes in specialtyID to update specialtyName
 watch(
@@ -279,6 +426,36 @@ async function handleSubmit() {
       throw new Error("Bệnh viện là bắt buộc");
     }
 
+    // Validate address fields
+    if (!addressStore.selectedProvince?.trim()) {
+      throw new Error("Tỉnh/thành phố là bắt buộc");
+    }
+    if (!addressStore.selectedDistrict?.trim()) {
+      throw new Error("Quận/huyện là bắt buộc");
+    }
+    if (!addressStore.selectedWard?.trim()) {
+      throw new Error("Phường/xã là bắt buộc");
+    }
+    if (!addressStore.detailedAddress?.trim()) {
+      throw new Error("Địa chỉ chi tiết là bắt buộc");
+    }
+
+    // Ghép địa chỉ đầy đủ
+    const fullAddress = [
+      addressStore.detailedAddress,
+      addressStore.selectedWard,
+      addressStore.selectedDistrict,
+      addressStore.selectedProvince,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    // Thêm địa chỉ vào doctor data
+    const doctorDataWithAddress = {
+      ...doctor.value,
+      address: fullAddress,
+    };
+
     // Hiển thị confirm dialog
     const result = await Swal.fire({
       title: "Xác nhận cập nhật",
@@ -293,19 +470,19 @@ async function handleSubmit() {
 
     if (result.isConfirmed) {
       // Debug: Log the data being sent
-      console.log("Sending update data:", doctor.value);
+      console.log("Sending update data:", doctorDataWithAddress);
 
       // Gọi API cập nhật bác sĩ
-      await updateDoctorProfile(doctor.value.doctorID, doctor.value);
+      await updateDoctorProfile(doctor.value.doctorID, doctorDataWithAddress);
 
       // Hiển thị Toast thông báo thành công
       Toast.fire({
         icon: "success",
-        title: `Đã cập nhật thông tin bác sĩ  thành công!`,
+        title: `Đã cập nhật thông tin bác sĩ thành công!`,
       });
 
       // Emit event để parent component biết đã cập nhật
-      emit("updated", doctor.value);
+      emit("updated", doctorDataWithAddress);
     }
   } catch (error) {
     console.error("Error updating doctor:", error);
@@ -326,38 +503,18 @@ async function handleSubmit() {
 .input-form {
   @apply w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-cyan-400;
 }
-</style>
 
-<style>
-/* Custom styles for toast notifications */
-/* .swal2-toast {
-  background: white !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  padding: 16px !important;
-  min-width: 300px !important;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .input-form {
+    @apply text-sm;
+  }
 }
 
-.swal2-toast-title {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #374151 !important;
-  margin-bottom: 4px !important;
+/* Modal specific responsive styles */
+@media (max-width: 640px) {
+  .input-form {
+    @apply px-2 py-1.5;
+  }
 }
-
-.swal2-toast-content {
-  font-size: 13px !important;
-  color: #6b7280 !important;
-  line-height: 1.4 !important;
-}
-
-/* Success toast specific styles */
-/* .swal2-toast.swal2-icon-success {
-  border-left: 4px solid #10b981 !important;
-} */
-
-/* Error toast specific styles */
-/* .swal2-toast.swal2-icon-error {
-  border-left: 4px solid #ef4444 !important;
-} */
 </style>

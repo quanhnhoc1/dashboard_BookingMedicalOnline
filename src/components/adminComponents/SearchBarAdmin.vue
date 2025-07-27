@@ -92,10 +92,23 @@ function handleSearchInput() {
   }, props.debounceTime);
 }
 
+// Hàm chuẩn hóa chuỗi để tìm kiếm không phân biệt chữ hoa/thường và có dấu/không dấu
+function normalizeString(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // bỏ dấu tiếng Việt
+    .toLowerCase()
+    .trim();
+}
+
 // Function thực hiện tìm kiếm
 function performSearch() {
   if (searchKeyword.value.trim()) {
-    emit("search", searchKeyword.value.trim());
+    const normalizedKeyword = normalizeString(searchKeyword.value);
+    emit("search", {
+      original: searchKeyword.value.trim(),
+      normalized: normalizedKeyword,
+    });
   } else {
     emit("clear");
   }

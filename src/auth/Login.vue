@@ -51,10 +51,10 @@ const handleLogin = () => {
           <div class="max-w-md mx-auto">
             <!-- Logo and Header -->
             <div class="text-center mb-8">
-              <img
+              <!-- <img
                 src="../../assets/img/logoMepro.png"
                 alt="MePro Logo"
-                class="h-20 mx-auto mb-6" />
+                class="h-20 mx-auto mb-6" /> -->
               <h1 class="text-3xl font-bold text-gray-800 mb-2">
                 Chào mừng trở lại
               </h1>

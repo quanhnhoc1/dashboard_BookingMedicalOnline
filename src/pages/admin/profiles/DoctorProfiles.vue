@@ -156,11 +156,11 @@
       </div>
     </div>
 
-    <!-- Table Section -->
+    <!-- Table Section with Enhanced Scroll -->
     <div
       class="bg-white rounded-lg shadow-md overflow-hidden flex-1 min-h-0 flex flex-col">
       <div
-        class="px-2 md:px-4 py-2 md:py-3 border-b border-gray-200 flex-shrink-0">
+        class="px-2 md:px-4 py-2 md:py-3 border-b border-gray-200 flex-shrink-0 bg-gradient-to-r from-gray-50 to-white">
         <div class="flex items-center justify-between">
           <h3 class="text-base font-semibold text-gray-900">
             Danh sách bác sĩ
@@ -182,7 +182,7 @@
       <!-- Error message -->
       <div
         v-if="error"
-        class="px-4 py-3 bg-red-100 border-l-4 border-red-500 text-red-700">
+        class="px-4 py-3 bg-red-100 border-l-4 border-red-500 text-red-700 flex-shrink-0">
         <div class="flex items-center">
           <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -193,189 +193,189 @@
           <span class="text-sm">{{ error }}</span>
         </div>
       </div>
-      <div class="flex-1 min-h-0 overflow-hidden">
-        <div
-          class="h-full overflow-x-auto overflow-y-auto"
-          style="max-height: calc(100vh - 400px)">
-          <table class="w-full min-w-[700px] text-sm">
-            <thead class="bg-gray-50 sticky top-0">
-              <tr>
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  #
-                </th>
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Thông tin bác sĩ
-                </th>
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Chuyên khoa
-                </th>
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">
-                  Bệnh viện
-                </th>
-                <!-- <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
-                  Kinh nghiệm
-                </th> -->
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
-                  Bằng cấp
-                </th>
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Trạng thái
-                </th>
-                <th
-                  class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Thao tác
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-100">
-              <tr
-                v-for="(doctor, index) in doctorsDebug"
-                :key="doctor.doctorID"
-                class="hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 cursor-pointer"
-                :style="{
-                  backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff',
-                }"
-                @click="showDoctorInfo(doctor)">
-                <td class="px-2 md:px-4 py-3 whitespace-nowrap">
-                  <div
-                    class="flex items-center justify-center w-6 h-6 bg-gray-100 rounded-full">
-                    <span class="text-xs font-medium text-gray-700">{{
-                      index + 1
-                    }}</span>
-                  </div>
-                </td>
-                <td class="px-2 md:px-4 py-3 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-8 w-8">
-                      <div
-                        class="h-8 w-8 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center shadow-md">
-                        <span class="text-white font-bold text-sm">{{
-                          doctor.doctorName
-                        }}</span>
-                      </div>
-                    </div>
-                    <div class="ml-2 md:ml-3">
-                      <div class="text-sm font-semibold text-gray-900">
-                        {{ doctor.doctorName }}
-                      </div>
-                      <div class="text-xs text-gray-500">
-                        {{ doctor.email }}
-                      </div>
-                      <div class="text-xs text-gray-400">
-                        {{ doctor.phone }}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-2 md:px-4 py-3 whitespace-nowrap">
-                  <span
-                    class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200"
-                    >{{ doctor.specialtyName }}</span
-                  >
-                </td>
-                <td
-                  class="px-2 md:px-4 py-3 whitespace-nowrap hidden sm:table-cell">
-                  <div class="text-sm text-gray-900 font-medium">
-                    {{ doctor.hospitalName }}
-                  </div>
-                </td>
-                <!-- <td
-                  class="px-2 md:px-4 py-3 whitespace-nowrap hidden md:table-cell">
-                  <div class="flex items-center">
+
+      <!-- Enhanced Scrollable Table Container -->
+      <div class="flex-1 min-h-0 relative">
+        <!-- Custom Scrollbar Container -->
+        <div class="h-full overflow-hidden">
+          <div
+            class="h-full overflow-y-auto overflow-x-auto custom-scrollbar"
+            style="max-height: calc(100vh - 400px)">
+            <!-- Table with Enhanced Design -->
+            <table class="w-full min-w-[700px] text-sm">
+              <thead
+                class="bg-gradient-to-r from-gray-50 to-blue-50 sticky top-0 z-10">
+                <tr class="border-b-2 border-gray-200">
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    #
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Thông tin bác sĩ
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Chuyên khoa
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">
+                    Bệnh viện
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
+                    Bằng cấp
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Trạng thái
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Thao tác
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-100">
+                <tr
+                  v-for="(doctor, index) in doctorsDebug"
+                  :key="doctor.doctorID"
+                  class="hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 cursor-pointer group"
+                  :style="{
+                    backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff',
+                  }"
+                  @click="showDoctorInfo(doctor)">
+                  <td class="px-2 md:px-4 py-3 whitespace-nowrap">
                     <div
-                      class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></div>
-                    <span class="text-sm font-medium text-gray-900"
-                      >{{ doctor.experience_years }} năm</span
-                    >
-                  </div>
-                </td> -->
-                <td
-                  class="px-2 md:px-4 py-3 whitespace-nowrap hidden md:table-cell">
-                  <span class="text-sm font-medium text-gray-900">{{
-                    doctor.degree
-                  }}</span>
-                </td>
-                <td class="px-2 md:px-4 py-3 whitespace-nowrap">
-                  <span
-                    :class="[
-                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full border',
-                      doctor.status === 'active'
-                        ? 'bg-green-100 text-green-800 border-green-200'
-                        : doctor.status === 'inactive'
-                        ? 'bg-red-100 text-red-800 border-red-200'
-                        : 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                    ]">
-                    {{
-                      doctor.status === "active"
-                        ? "Hoạt động"
-                        : doctor.status === "inactive"
-                        ? "Không hoạt động"
-                        : "Chờ duyệt"
-                    }}
-                  </span>
-                </td>
-                <td class="px-2 md:px-4 py-3 whitespace-nowrap">
-                  <div class="flex items-center gap-1 md:gap-2">
-                    <button
-                      @click.stop="editDoctor(doctor)"
-                      class="inline-flex items-center justify-center p-2 text-xs font-medium text-cyan-600 bg-cyan-50 rounded-md hover:bg-cyan-100 transition-colors duration-200">
-                      <svg
-                        class="w-4 h-4 md:mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                      </svg>
-                      <span class="hidden md:inline">Sửa</span>
-                    </button>
-                    <button
-                      @click.stop="deleteDoctor(doctor.doctorID)"
-                      :disabled="loading"
-                      class="inline-flex items-center justify-center p-2 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 disabled:bg-gray-100 disabled:text-gray-400 transition-colors duration-200">
-                      <svg
-                        v-if="!loading"
-                        class="w-4 h-4 md:mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                      </svg>
-                      <div
-                        v-else
-                        class="w-4 h-4 md:mr-1 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                      <span class="hidden md:inline">{{
-                        loading ? "Đang xóa..." : "Xóa"
+                      class="flex items-center justify-center w-6 h-6 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full group-hover:from-cyan-100 group-hover:to-blue-100 transition-all duration-200">
+                      <span class="text-xs font-medium text-gray-700">{{
+                        index + 1
                       }}</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                    </div>
+                  </td>
+                  <td class="px-2 md:px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-8 w-8">
+                        <div
+                          class="h-8 w-8 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
+                          <span class="text-white font-bold text-sm">{{
+                            doctor.doctorName
+                          }}</span>
+                        </div>
+                      </div>
+                      <div class="ml-2 md:ml-3">
+                        <div
+                          class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+                          {{ doctor.doctorName }}
+                        </div>
+                        <div class="text-xs text-gray-500">
+                          {{ doctor.email }}
+                        </div>
+                        <div class="text-xs text-gray-400">
+                          {{ doctor.phone }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-2 md:px-4 py-3 whitespace-nowrap">
+                    <span
+                      class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200 group-hover:from-blue-200 group-hover:to-cyan-200 transition-all duration-200"
+                      >{{ doctor.specialtyName }}</span
+                    >
+                  </td>
+                  <td
+                    class="px-2 md:px-4 py-3 whitespace-nowrap hidden sm:table-cell">
+                    <div class="text-sm text-gray-900 font-medium">
+                      {{ doctor.hospitalName }}
+                    </div>
+                  </td>
+                  <td
+                    class="px-2 md:px-4 py-3 whitespace-nowrap hidden md:table-cell">
+                    <span class="text-sm font-medium text-gray-900">{{
+                      doctor.degree
+                    }}</span>
+                  </td>
+                  <td class="px-2 md:px-4 py-3 whitespace-nowrap">
+                    <span
+                      :class="[
+                        'inline-flex px-2 py-1 text-xs font-semibold rounded-full border transition-all duration-200',
+                        doctor.status === 'active'
+                          ? 'bg-green-100 text-green-800 border-green-200 group-hover:bg-green-200'
+                          : doctor.status === 'inactive'
+                          ? 'bg-red-100 text-red-800 border-red-200 group-hover:bg-red-200'
+                          : 'bg-yellow-100 text-yellow-800 border-yellow-200 group-hover:bg-yellow-200',
+                      ]">
+                      {{
+                        doctor.status === "active"
+                          ? "Hoạt động"
+                          : doctor.status === "inactive"
+                          ? "Không hoạt động"
+                          : "Chờ duyệt"
+                      }}
+                    </span>
+                  </td>
+                  <td class="px-2 md:px-4 py-3 whitespace-nowrap">
+                    <div
+                      class="flex items-center gap-1 md:gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <button
+                        @click.stop="editDoctor(doctor)"
+                        class="inline-flex items-center justify-center p-2 text-xs font-medium text-cyan-600 bg-cyan-50 rounded-md hover:bg-cyan-100 hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200">
+                        <svg
+                          class="w-4 h-4 md:mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        <span class="hidden md:inline">Sửa</span>
+                      </button>
+                      <button
+                        @click.stop="deleteDoctor(doctor.doctorID)"
+                        :disabled="loading"
+                        class="inline-flex items-center justify-center p-2 text-xs font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 hover:shadow-md transform hover:-translate-y-0.5 disabled:bg-gray-100 disabled:text-gray-400 transition-all duration-200">
+                        <svg
+                          v-if="!loading"
+                          class="w-4 h-4 md:mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        <div
+                          v-else
+                          class="w-4 h-4 md:mr-1 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="hidden md:inline">{{
+                          loading ? "Đang xóa..." : "Xóa"
+                        }}</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+
         <!-- Debug Info -->
-        <div class="px-4 py-2 bg-yellow-100 text-yellow-800 text-sm">
+        <div
+          class="px-4 py-2 bg-yellow-100 text-yellow-800 text-sm flex-shrink-0">
           Debug: Có {{ doctorsDebug.length }} bác sĩ được load
         </div>
+
         <!-- Empty State -->
-        <div v-if="doctorsDebug.length === 0" class="text-center py-12">
+        <div
+          v-if="doctorsDebug.length === 0"
+          class="text-center py-12 flex-shrink-0">
           <div
-            class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+            class="mx-auto w-16 h-16 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-3">
             <svg
               class="w-8 h-8 text-gray-400"
               fill="none"
@@ -396,7 +396,7 @@
           </p>
           <button
             @click="addNewDoctor"
-            class="inline-flex items-center px-3 py-2 bg-cyan-500 text-white text-sm rounded-md hover:bg-cyan-600 transition-colors duration-200">
+            class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm rounded-md hover:from-cyan-600 hover:to-blue-600 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
             <svg
               class="w-4 h-4 mr-1.5"
               fill="none"
@@ -487,16 +487,73 @@
   transition: all 0.3s ease-in-out;
 }
 
+/* Custom Scrollbar Styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #cbd5e0, #a0aec0);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #a0aec0, #718096);
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: #f7fafc;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced table row animations */
+tbody tr {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+tbody tr:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Sticky header with backdrop blur */
+thead {
+  backdrop-filter: blur(8px);
+  background: rgba(249, 250, 251, 0.95);
+}
+
 @media (max-width: 768px) {
   .modal-content {
     max-width: 95vw;
     margin: 0.5rem;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
   }
 }
 </style>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useDoctorStore } from "@/stores/getDoctorStore";
 import SearchBarAdmin from "@/components/adminComponents/SearchBarAdmin.vue";
@@ -505,6 +562,7 @@ import modalUpdateDoctor from "@/components/adminComponents/modalUpdateDoctor.vu
 import doctorInfoModal from "@/components/adminComponents/doctorInfoModal.vue";
 import { useAddressStore } from "@/stores/getAddressStore";
 import { userHospitalsStore } from "@/stores/getHospitalsStore";
+import { searchDoctors } from "@/utils/searchUtils";
 const hospitalsStore = userHospitalsStore();
 // Cấu hình Toast notification
 const Toast = Swal.mixin({
@@ -519,6 +577,7 @@ const Toast = Swal.mixin({
   },
 });
 
+const router = useRouter();
 const keyword = ref("");
 const doctorStore = useDoctorStore();
 const addressStore = useAddressStore();
@@ -564,10 +623,10 @@ const showInfoModal = ref(false);
 const selectedDoctorForInfo = ref(null);
 
 // Function xử lý tìm kiếm từ SearchBar component
-async function handleSearch(searchTerm) {
-  keyword.value = searchTerm;
-  await performSearch();
-}
+// async function handleSearch(searchTerm) {
+//   keyword.value = searchTerm;
+//   await performSearch();
+// }
 
 // Function xử lý khi clear search
 async function handleClear() {
@@ -581,12 +640,20 @@ function handleInputChange(value) {
   keyword.value = value;
 }
 
+// Function xử lý search event từ SearchBarAdmin
+function handleSearch(searchData) {
+  console.log("Search data:", searchData);
+  keyword.value = searchData.original;
+  performSearch();
+}
+
 // Function thực hiện tìm kiếm
 async function performSearch() {
   try {
     // Nếu không có từ khóa, load lại tất cả bác sĩ
     if (!keyword.value.trim()) {
       await doctorStore.fetchDoctor();
+      doctors.value = doctorsDebug.value;
       return;
     }
 
@@ -606,29 +673,12 @@ async function performSearch() {
 // Function filter bác sĩ theo từ khóa
 function filterDoctors() {
   if (!keyword.value.trim()) {
-    return; // Không làm gì nếu không có từ khóa
+    doctors.value = doctorsDebug.value; // Hiển thị tất cả nếu không có từ khóa
+    return;
   }
 
-  // Tách từ khóa thành các từ riêng biệt
-  const keywords = keyword.value.toLowerCase().trim().split(/\s+/);
-
-  const filteredDoctors = doctorsDebug.value.filter((doctor) => {
-    // Tạo chuỗi tìm kiếm từ các trường thông tin
-    const searchText = [
-      doctor.doctorName || "",
-      doctor.specialtyName || "",
-      doctor.hospitalName || "",
-      doctor.email || "",
-      doctor.phone || "",
-      doctor.degree || "",
-      doctor.experience_years ? `${doctor.experience_years} năm` : "",
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    // Kiểm tra xem tất cả các từ khóa có xuất hiện trong chuỗi tìm kiếm không
-    return keywords.every((keyword) => searchText.includes(keyword));
-  });
+  // Sử dụng utility function để tìm kiếm không phân biệt chữ hoa/thường và có dấu/không dấu
+  const filteredDoctors = searchDoctors(doctorsDebug.value, keyword.value);
 
   // Cập nhật danh sách bác sĩ đã filter
   doctors.value = filteredDoctors;
@@ -679,7 +729,7 @@ function showDoctorInfo(doctor) {
 }
 
 function addNewDoctor() {
-  alert("Tính năng thêm bác sĩ mới sẽ được phát triển sau!");
+  router.push({ name: "AddNewDoctor" });
 }
 
 async function deleteDoctor(id) {

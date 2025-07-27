@@ -123,7 +123,34 @@ async function updateDoctorProfile(doctorID, doctorData) {
     throw err.response?.data?.message || "Không thể cập nhật thông tin bác sĩ";
   }
 }
-
+async function addNewDoctor(doctorPayLoad) {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/add-new-doctor-profile",
+      doctorPayLoad
+    );
+    console.log("Doctor added successfully:", response.data);
+    return response.data;
+  } catch (err) {
+    console.error("Error adding doctor:", err.response?.data?.message);
+    throw err.response?.data?.message || "Không thể thêm bác sĩ";
+  }
+}
+async function getDoctorsByHospitalIDService(hospitalID) {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/get-doctors-by-hospital-id/${hospitalID}`
+    );
+    console.log("Doctors by hospital ID:", response.data);
+    return response.data;
+  } catch (err) {
+    console.error(
+      "Error fetching doctors by hospital ID:",
+      err.response?.data?.message
+    );
+    throw err.response?.data?.message || "Không thể lấy danh sách bác sĩ";
+  }
+}
 export {
   getScheduleDayServices,
   getScheduleMonthServices,
@@ -133,4 +160,6 @@ export {
   getAllDoctorService,
   deleteDoctorByID,
   updateDoctorProfile,
+  addNewDoctor,
+  getDoctorsByHospitalIDService,
 };

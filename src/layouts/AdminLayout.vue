@@ -64,8 +64,13 @@ const toggleProfileDropdown = () => {
                 class="menu-item"
                 >📊 Quản lý bác sĩ</router-link
               >
-              <router-link to="/admin/profiles/user-profiles" class="menu-item"
+              <!-- <router-link to="/admin/profiles/user-profiles" class="menu-item"
                 >👤 Quản lý người dùng</router-link
+              > -->
+              <router-link
+                to="/admin/schedules/doctor-schedules"
+                class="menu-item"
+                >🕒 Quản lý lịch khám</router-link
               >
             </div>
           </div>

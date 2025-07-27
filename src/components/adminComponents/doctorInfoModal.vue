@@ -126,6 +126,35 @@
                     <p class="text-gray-900">{{ doctor.phone }}</p>
                   </div>
                 </div>
+                <div
+                  v-if="getDoctorAddress(doctor)"
+                  class="flex items-start gap-3">
+                  <div
+                    class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg
+                      class="w-4 h-4 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-500">Địa chỉ</p>
+                    <p class="text-gray-900 leading-relaxed">
+                      {{ getDoctorAddress(doctor) }}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -314,6 +343,39 @@ function getStatusText(status) {
       return "Không xác định";
   }
 }
+
+// Function để lấy địa chỉ bác sĩ từ nhiều trường hợp có thể có
+function getDoctorAddress(doctor) {
+  if (!doctor) return null;
+
+  // Thử tất cả các trường hợp có thể có của địa chỉ
+  const address =
+    doctor.ADDRESS ||
+    doctor.address ||
+    doctor.Address ||
+    doctor.ADDRESS_LINE ||
+    doctor.addressLine;
+
+  return address || null;
+}
+
+// Debug function để kiểm tra dữ liệu bác sĩ
+function debugDoctorData() {
+  if (props.doctor) {
+    console.log("Doctor data:", props.doctor);
+    console.log("Doctor keys:", Object.keys(props.doctor));
+    console.log("Doctor ADDRESS:", props.doctor.ADDRESS);
+    console.log("Doctor address:", props.doctor.address);
+    console.log(
+      "Doctor address (any case):",
+      props.doctor.address || props.doctor.ADDRESS || props.doctor.Address
+    );
+    console.log("getDoctorAddress result:", getDoctorAddress(props.doctor));
+  }
+}
+
+// Gọi debug function khi component mount
+debugDoctorData();
 </script>
 
 <style scoped>
